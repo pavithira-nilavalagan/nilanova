@@ -8,9 +8,8 @@
   <title>Track Your Order | NilaNova</title>
   <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
-
   <style>
-* {
+    * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -21,10 +20,11 @@
     body {
       width: 100%;
       max-width: 100%;
-      overflow-x: hidden; /* Window boundary overflow shield */
+      overflow-x: hidden;
       background: #f1f3f6;
     }
 
+    /* Standard Sticky Footer Setup using Flexbox */
     body {
       display: flex;
       flex-direction: column;
@@ -32,7 +32,11 @@
     }
 
     main {
-      flex: 1;
+      flex: 1 0 auto; /* Pushes the footer down when content is short */
+    }
+
+    footer {
+      flex-shrink: 0;
     }
 
     /* ==========================================================================
@@ -202,7 +206,6 @@
       padding-bottom: 0;
     }
 
-    /* Track Connector Line */
     .timeline-item::before {
       content: "";
       position: absolute;
@@ -218,7 +221,6 @@
       display: none;
     }
 
-    /* Node Status Badges */
     .timeline-icon {
       width: 46px;
       height: 46px;
@@ -235,7 +237,6 @@
       z-index: 2;
     }
 
-    /* Status Text Panels */
     .timeline-content {
       background: #fff;
       border-radius: 12px;
@@ -263,7 +264,6 @@
       line-height: 1.5;
     }
 
-    /* State Rule Modifiers */
     .timeline-item.completed .timeline-icon {
       background: #22c55e;
     }
@@ -352,7 +352,7 @@
     }
 
     @media screen and (max-width: 360px) {
-      .track-container {
+      track-container {
         padding: 0 10px 30px 10px;
       }
 
@@ -369,8 +369,6 @@
 
 <body>
 
-
-
   <header>
     <div class="logo-text">
       <h3>NilaNova</h3>
@@ -383,19 +381,20 @@
       <a href="order.html">Order</a>
 
       <div class="cart-icon">
-
-      <a href="cart.html">
-        <i class="ri-shopping-cart-2-line"></i>
-      </a>
+        <a href="cart.html">
+          <i class="ri-shopping-cart-2-line"></i>
+        </a>
       </div>
     </nav>
   </header>
 
-  <div class="page-title" style="font-weight: 700;font-size: 25px;padding-left: 570px;">Track Orders</div>
-  <div class="track-container" id="trackOrders"></div>
+  <!-- Wrapping dynamic text elements inside a main tag to satisfy flex alignment layouts -->
+  <main>
+    <div class="page-title">Track Orders</div>
+    <div class="track-container" id="trackOrders"></div>
+  </main>
 
-  <footer
-    style="background-color: transparent; color: #fff; padding: 40px 20px; font-family: Arial, sans-serif; font-size: 14px; border-top: 2px solid purple; box-shadow: 0 0 20px purple;">
+  <footer style="background-color: transparent; color: #fff; padding: 40px 20px; font-family: Arial, sans-serif; font-size: 14px; border-top: 2px solid purple; box-shadow: 0 0 20px purple;">
     <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between;">
       <div style="flex: 1 1 200px; margin-bottom: 20px;">
         <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Get to Know Us</h4>
@@ -449,15 +448,9 @@
       </p>
     </div>
   </footer>
+
   <script>
-
-    requireLogin();
-
-  </script>
-  <script>
-
-    // Load saved completed orders
-    // Check Login
+    // Check Login 
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
     if (!currentUser) {
@@ -466,11 +459,11 @@
     }
 
     // User-specific order key
-    const orderKey = "completedOrders_" + currentUser.email;
+    const orderKey = "completedOrders_" + (currentUser ? currentUser.email : "");
 
     // Load this user's completed orders
-    let completedOrders =
-      JSON.parse(localStorage.getItem(orderKey)) || [];
+    let completedOrders = JSON.parse(localStorage.getItem(orderKey)) || [];
+
     // Delivery days based on shipping cost
     function deliveryDaysFromShipping(cost) {
       const c = Number(cost);
@@ -492,98 +485,70 @@
     // MAIN FUNCTION
     function renderTrackOrders() {
       const container = document.getElementById("trackOrders");
+      if (!container) return;
       container.innerHTML = "";
 
       if (!completedOrders.length) {
-        container.innerHTML = '<p style="text-align:center; padding:20px; color:#666;">No orders to track.</p>';
+        container.innerHTML = '<p style="text-align:center; padding:40px; color:#666; font-size: 16px;">No orders to track.</p>';
         return;
       }
 
       completedOrders.forEach(order => {
-
-        // ---- AUTO STATUS CALCULATION ----
-
         let orderDate = new Date(order.orderDate);
         let now = new Date();
-
-        let daysPassed =
-          Math.floor((now - orderDate) / (1000 * 60 * 60 * 24));
-
+        let daysPassed = Math.floor((now - orderDate) / (1000 * 60 * 60 * 24));
         let deliveryDays = deliveryDaysFromShipping(order.selectedShipping);
-
         let autoStatus = 0;
 
-        if (daysPassed >= 0) autoStatus = 0; // Ordered
-        if (daysPassed >= 1) autoStatus = 1; // Shipped
-        if (daysPassed >= 2) autoStatus = 2; // Out for Delivery
-        if (daysPassed >= deliveryDays) autoStatus = 3; // Delivered
+        if (daysPassed >= 0) autoStatus = 0; 
+        if (daysPassed >= 1) autoStatus = 1; 
+        if (daysPassed >= 2) autoStatus = 2; 
+        if (daysPassed >= deliveryDays) autoStatus = 3; 
 
-        // Save status back to order (keeps updated)
         order.status = autoStatus;
-        localStorage.setItem(
-          orderKey,
-          JSON.stringify(completedOrders)
-        );
+        localStorage.setItem(orderKey, JSON.stringify(completedOrders));
         const deliveryDate = formatDateFromDays(deliveryDays);
 
-        // Render each order block
         container.insertAdjacentHTML("beforeend", `
             <div class="track-order">
                 <div class="order-header">
                     <img src="${order.img}" class="order-img">
-
                     <div class="order-info">
                         <h4>${order.name}</h4>
                         <p>Order ID: <b>${order.id}</b></p>
                         <p>Qty: ${order.qty} | Payment: ${order.paymentMethod}</p>
-
                         <p>Order Date: <strong>${order.orderDate}</strong></p>
                         <p>Expected Delivery: <b>${deliveryDate}</b></p>
                     </div>
                 </div>
-
                 <div class="vertical-timeline">
-
-    ${statusLabels.map((label, idx) => {
-
-          const icons = [
-            "📦",
-            "🚚",
-            "🛵",
-            "🏠"
-          ];
-
-          const descriptions = [
-            "Your order has been confirmed.",
-            "Package left our warehouse.",
-            "Your package is on the way.",
-            "Package delivered successfully."
-          ];
-
-          return `
-        <div class="timeline-item ${idx <= autoStatus ? 'completed' : ''} ${idx === autoStatus ? 'active' : ''}">
-
-            <div class="timeline-icon">
-                ${idx < autoStatus ? "✔" : icons[idx]}
-            </div>
-
-            <div class="timeline-content">
-                <h4>${label}</h4>
-                <p>${descriptions[idx]}</p>
-            </div>
-
-        </div>
-        `;
-        }).join("")}
-
-</div>
+                  ${statusLabels.map((label, idx) => {
+                    const icons = ["📦", "🚚", "🛵", "🏠"];
+                    const descriptions = [
+                      "Your order has been confirmed.",
+                      "Package left our warehouse.",
+                      "Your package is on the way.",
+                      "Package delivered successfully."
+                    ];
+                    return `
+                      <div class="timeline-item ${idx <= autoStatus ? 'completed' : ''} ${idx === autoStatus ? 'active' : ''}">
+                          <div class="timeline-icon">
+                              ${idx < autoStatus ? "✔" : icons[idx]}
+                          </div>
+                          <div class="timeline-content">
+                              <h4>${label}</h4>
+                              <p>${descriptions[idx]}</p>
+                          </div>
+                      </div>
+                    `;
+                  }).join("")}
+                </div>
             </div>
         `);
       });
     }
 
     renderTrackOrders();
-
   </script>
 </body>
 
