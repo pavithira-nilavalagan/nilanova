@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="images/download.png">
+  <title>Shop - Electronics, Fashion, Books & More | NilaNova</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+  <style>
+/* ==========================================================================
+   GLOBAL SETTINGS & SYNCHRONIZATION WITH INDEX.HTML
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition-duration: 0.15s !important; /* Matches index.html fast transitions */
+}
+
+body {
+    background: #ffffffc0; /* Unified color backdrop */
+    color: #222;
+    line-height: 1.35;
+    overflow-x: hidden; /* Prevent horizontal scrolling disruption */
+}
+
+/* ==========================================================================
+   HEADER & LOGO ENGINE[cite: 2]
+   ========================================================================== */
+header {
+    width: 100%;
+    background: #ffffffc0;
+    border-bottom: 2px solid purple;
+    box-shadow: 0 0 20px purple;
+    padding: 12px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+.logo-text h3 {
+    font-size: 20px;
+    font-weight: 800;
+    background: linear-gradient(to right, purple, rgb(201, 3, 201), violet, rgb(201, 3, 201), purple);
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: animate-purple 2.5s linear infinite, fadeIn 1s ease forwards;
+}
+
+@keyframes animate-purple {
+    0% { background-position: 0%; }
+    100% { background-position: 200%; }
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+/* ==========================================================================
+   SEARCH BAR & MENU[cite: 2]
+   ========================================================================== */
+.search-bar {
+    width: 40%;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px 40px 10px 15px;
+    background: transparent;
+    border: 2px solid purple;
+    color: black;
+    font-size: 15px;
+    border-radius: 40px;
+    outline: none;
+}
+
+.search-bar input::placeholder {
+    color: rgba(0, 0, 0, 0.59);
+}
+
+.search-bar i {
+    position: absolute;
+    right: 12px;
+    font-size: 20px;
+    color: purple;
+    cursor: pointer;
+}
+
+.header-menu {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.header-menu a {
+    color: black;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: bold;
+    position: relative;
+}
+
+.header-menu a:hover {
+    color: purple;
+}
+
+.header-menu a::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: purple;
+    transition: .15s;
+}
+
+.header-menu a:hover::after {
+    width: 100%;
+}
+
+.cart-icon {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.cart-icon i {
+    font-size: 22px;
+    color: purple;
+}
+
+/* ==========================================================================
+   CONTENT LAYOUT CONTROLS[cite: 2]
+   ========================================================================== */
+main {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.controls {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 18px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.controls select,
+.controls button {
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+}
+
+/* ==========================================================================
+   PRODUCT ARCHITECTURE & FIXED RATINGS BALANCE
+   ========================================================================== */
+.product-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.product-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 280px 1fr 240px; 
+    gap: 18px;
+    padding: 16px;
+    align-items: start;
+}
+
+.product-image {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    width: 100%;
+}
+
+.product-image img {
+    max-width: 100%;
+    height: auto;
+    max-height: 220px;
+    object-fit: contain;
+    border-radius: 6px;
+}
+
+/* --- PERFECT RATING FIX --- */
+/* ==========================================================================
+   FIXED RATING BALANCER (PREVENTS LARGE / STRETCHED IMAGES)
+   ========================================================================== */
+.rating-container {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center; /* Perfectly vertically centers image with text */
+    margin: 4px 0;
+    width: max-content;  /* Prevents container from expanding across row */
+}
+
+.ratings {
+    height: 16px !important;    /* Force strict height boundary */
+    max-height: 16px !important;
+    width: 80px !important;     /* Locks horizontal scaling proportion */
+    max-width: 80px !important;
+    object-fit: contain !important; /* Preserves natural image aspect ratio */
+    display: inline-block !important;
+    flex-shrink: 0;             /* Stops layout engines from manipulating size */
+}
+
+.rating-count {
+    font-size: 13px;
+    color: #0066cc;
+    font-weight: 700;
+    line-height: 16px;          /* Matches exactly with image height */
+    display: inline-block;
+}
+.bought-count {
+    font-size: 13px;
+    color: #333;
+}
+
+.product-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.product-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111;
+}
+
+.product-brand-link {
+    font-size: 13px;
+    color: #0066cc;
+    text-decoration: none;
+}
+
+.deal-badge {
+    background: rgb(233, 12, 107);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    display: inline-block;
+}
+
+.price-row {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    flex-wrap: wrap;
+}
+
+.price-current {
+    font-size: 22px;
+    color: #b12704;
+    font-weight: 700;
+}
+
+.price-old {
+    color: #666;
+    text-decoration: line-through;
+    font-size: 14px;
+}
+
+.price-off {
+    color: rgb(233, 12, 107);
+    font-weight: 600;
+}
+
+.specs-list {
+    background: #f8f8f8;
+    border: 1px solid #eee;
+    padding: 10px;
+    border-radius: 6px;
+    list-style: none;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.specs-list li {
+    font-size: 13px;
+    color: #333;
+    padding: 4px 6px;
+}
+
+.offers {
+    font-weight: 700;
+    margin-top: 6px;
+    color: #111;
+}
+
+.delivery-info {
+    font-size: 13px;
+    color: #555;
+}
+
+.stock {
+    color: green;
+    font-weight: 700;
+}
+
+/* Actions Buttons Setup[cite: 2] */
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 10px 14px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.btn-cart {
+    background: #ffd54a;
+    color: #111;
+    min-width: 120px;
+}
+
+.btn-buy {
+    background: #ff8a00;
+    color: #fff;
+    min-width: 120px;
+}
+
+.btn-wishlist {
+    background: #fff;
+    color: purple;
+    border: 2px solid purple;
+}
+
+.btn-wishlist:hover {
+    background: purple;
+    color: #fff;
+}
+
+/* Right Checkout Box[cite: 2] */
+.product-side {
+    border-left: 1px solid #eee;
+    padding-left: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.product-side p {
+    font-size: 14px;
+}
+
+.exchange {
+    color: rgb(233, 12, 107);
+    font-weight: 700;
+}
+
+/* ==========================================================================
+   PAGINATION RE-BALANCING SYSTEM
+   ========================================================================== */
+.pagination {
+    margin: 40px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    max-width: 100%;
+    padding: 10px 20px;
+}
+
+.pagination button {
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 50% !important; /* Premium circular design layer */
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pagination button:hover {
+    border-color: purple;
+    color: purple;
+    background-color: #f3e5f5;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Dynamic handling rule for active pagination page */
+.pagination button[style*="background: rgb(240, 240, 240)"],
+.pagination button[style*="background:#f0f0f0"] {
+    background: purple !important;
+    color: #fff !important;
+    border-color: purple !important;
+    pointer-events: none; /* Disables clicking current active window */
+}
+
+/* ==========================================================================
+   RESPONSIVE MEDIA LAYER[cite: 2]
+   ========================================================================== */
+@media screen and (max-width: 1024px) {
+    header { padding: 12px 20px; }
+    .search-bar { width: 35%; }
+    .header-menu { gap: 15px; }
+    .product-card { grid-template-columns: 240px 1fr 200px; gap: 14px; }
+}
+
+@media screen and (max-width: 850px) {
+    header { flex-wrap: wrap; padding: 12px 15px; gap: 10px; }
+    .logo-text { order: 1; }
+    .header-menu { order: 2; gap: 12px; }
+    .search-bar { order: 3; width: 100%; margin-top: 4px; }
+    .product-card { grid-template-columns: 220px 1fr; }
+    .product-side {
+        grid-column: span 2;
+        border-left: none;
+        padding-left: 0;
+        border-top: 1px dashed #ddd;
+        padding-top: 12px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .product-side div { display: flex; gap: 8px; width: 100% !important; }
+    .product-side .btn { flex: 1; margin-top: 0 !important; }
+}
+
+@media screen and (max-width: 600px) {
+    header { padding: 10px; }
+    .logo-text h3 { font-size: 18px; }
+    .header-menu { width: 100%; overflow-x: auto; white-space: nowrap; padding-bottom: 4px; gap: 14px; order: 4; }
+    .header-menu a { font-size: 13px; flex-shrink: 0; }
+    .product-card { grid-template-columns: 1fr; padding: 12px; }
+    .product-image img { max-height: 180px; }
+    .product-title { font-size: 16px; }
+    .price-current { font-size: 19px; }
+    .product-details .actions { display: none; }
+    .product-side { grid-column: span 1; }
+    .product-side div { flex-direction: column; }
+    .pagination button { min-width: 36px; height: 36px; font-size: 13px; }
+}
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo-text">
+      <h3 style="color: purple;">NilaNova</h3>
+    </div>
+    <div class="search-bar">
+      <input id="searchInput" placeholder="Search for products..." onkeydown="if(event.key==='Enter') applySearch()">
+      <i class="ri-search-line" onclick="applySearch()"></i>
+    </div>
+
+
+    <div class="header-menu">
+      <a href="deal.html">Deal</a>
+      <a href="#" onclick="filterCategory('SamSung,Vivo,Lenovo Tab,Apple Tab')">Mobiles</a>
+      <a href="#" onclick="filterCategory('The Secret Garden,The Harry Porter')">Books</a>
+      <a href="#" onclick="filterCategory('Noise,Fastrack')">Watches</a>
+      <a href="#" onclick="filterCategory('Vendoz,Bruton')">Shoes</a>
+      <a href="#" onclick="filterCategory('Dell,Acer')">Laptops</a>
+      <a href="#" onclick="filterCategory('Cruise AC,Portable Air Cooler Fan,SamSung TV,LG TV')">Appliances</a>
+      <a href="#" onclick="filterCategory('Ptron,Portronics,Boat,Ambrane')">Accessories</a>
+      <a href="#" onclick="filterCategory('Remote Car,Doll')">Toys</a>
+
+
+      <div class="cart-icon" id="cartIcon">
+        <a href="cart.html">
+          <i class="ri-shopping-cart-2-line"></i>
+        </a>
+      </div>
+    </div>
+
+  </header>
+
+  <main>
+    <div class="controls">
+      <select id="sortSelect" onchange="applySort()">
+        <option value="default">Sort: Default</option>
+        <option value="priceLow">Price: Low to High</option>
+        <option value="priceHigh">Price: High to Low</option>
+      </select>
+
+      <button onclick="resetFilters()">Show All</button>
+      <div style="margin-left:auto; font-size:13px; color:#555;">
+        Showing <span id="showingCount">0</span> of <span id="totalCount">0</span> products
+      </div>
+    </div>
+
+    <section class="product-list" id="productList"></section>
+
+    <div class="pagination" id="pagination"></div>
+  </main>
+
+  <footer style="background-color: transparent; color: #fff; padding: 40px 20px; font-family: Arial, sans-serif; font-size: 14px;     border-top: 2px solid purple;
+    box-shadow: 0 0 20px purple;">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between;">
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Get to Know Us</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">About NilaNova</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Careers</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Press Releases</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">NilaNova Science</a></li>
+        </ul>
+      </div>
+
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Connect with Us</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">Facebook</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Twitter</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Instagram</a></li>
+        </ul>
+      </div>
+
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Make Money with Us</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">Sell on NilaNova</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Become an Affiliate</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Advertise Your Products</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Fulfilment by NilaNova</a></li>
+        </ul>
+      </div>
+
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Let Us Help You</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">Your Account</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Returns Centre</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">100% Purchase Protection</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Download NilaNova App</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Help</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <hr style="border: 0; height: 1px; background: black; margin: 20px 0;">
+
+    <div style="max-width: 1200px; margin: 0 auto; text-align: center; font-size: 12px; line-height: 30px;">
+      <p style="color: black;">
+        Conditions of Use & Sale | Privacy Notice | Interest-Based Ads
+      </p>
+      <p style="color: black;">
+        © 2026 NilaNova.com, Inc. or its affiliates
+      </p>
+    </div>
+  </footer>
+
+  <script>
+
+    requireLogin();
+
+  </script>
+
+  <script>
+
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+    if (!currentUser) {
+      alert("Please sign in first.");
+      window.location.href = "signin.html";
+    }
+
+    const cartKey = "cartData_" + currentUser.email;
+    const cartCountKey = "cartCount_" + currentUser.email;
+    // --- product data (kept from your input)
+    const products = [
+      { id: 1, name: "Samsung", price: 9999, img: "images/Samsung.webp" },
+      { id: 2, name: "Noise", price: 499, img: "images/Noise.webp" },
+      { id: 3, name: "The Secret Garden", price: 199, img: "images/secret_book.webp" },
+      { id: 4, name: "Vendoz", price: 1499, img: "images/shoe.webp" },
+      { id: 5, name: "Safari", price: 899, img: "images/safari_bag.webp" },
+      { id: 6, name: "SamSung TV", price: 25999, img: "images/samsung_tv.webp" },
+      { id: 7, name: "Lenovo Tab", price: 13999, img: "images/Lenovo.webp" },
+      { id: 8, name: "Ptron", price: 299, img: "images/Ptron.webp" },
+      { id: 9, name: "Cruise AC", price: 1299, img: "images/AC.webp" },
+      { id: 10, name: "Dell", price: 2499, img: "images/Dell.webp" },
+      { id: 11, name: "Ambrane", price: 299, img: "images/Ambrane.webp" },
+      { id: 12, name: "Remote Car", price: 500, img: "images/rc.webp" },
+      { id: 13, name: "Vivo", price: 9999, img: "images/Vivo.webp" },
+      { id: 14, name: "Fastrack", price: 499, img: "images/Fastrack.webp" },
+      { id: 15, name: "The Harry Porter", price: 199, img: "images/harry.webp" },
+      { id: 16, name: "Bruton", price: 1499, img: "images/sports_shoe.webp" },
+      { id: 17, name: "Pink Backpack", price: 899, img: "images/Pink_bag.webp" },
+      { id: 18, name: "LG TV", price: 25999, img: "images/LG.webp" },
+      { id: 19, name: "Apple Tab", price: 13999, img: "images/Appletab.webp" },
+      { id: 20, name: "Portronics", price: 299, img: "images/Portronics.webp" },
+      { id: 21, name: "Portable Air Cooler Fan", price: 1299, img: "images/Air.webp" },
+      { id: 22, name: "Acer", price: 2499, img: "images/Acer.webp" },
+      { id: 23, name: "Boat", price: 299, img: "images/Boat.webp" },
+      { id: 24, name: "Doll", price: 500, img: "images/Doll.webp" }
+    ];
+
+    let filteredProducts = [...products];
+    let currentPage = 1;
+    const itemsPerPage = 6; // show fewer per page since each is detailed
+    let cartCount = Number(localStorage.getItem(cartCountKey)) || 0;
+    updateCartIcon();
+
+    // helper: get sample specs based on name (kept and expanded from your original)
+    function getSpecifications(name) {
+      switch (name.toLowerCase()) {
+        case "samsung", "vivo": return ["6.5-inch display", "5000mAh battery", "64MP camera"];
+        case "noise", "fastrack": return ["Heart rate monitor", "1.4-inch display", "Water-resistant"];
+        case "the secret garden", "the harry porter": return ["Paperback", "300 pages", "English language"];
+        case "vendoz", "bruton": return ["Size options 6-12", "Breathable mesh", "Rubber sole"];
+        case "safari", "pink backpack": return ["15.6-inch laptop fit", "Water-resistant", "Multiple compartments"];
+        case "samsung tv", "lg tv": return ["43-inch", "4K resolution", "Smart OS"];
+        case "lenovo tab", "apple tab": return ["10-inch display", "64GB storage", "8MP camera"];
+        case "ptron", "portronics": return ["Wireless", "Over-ear", "Noise cancellation"];
+        case "cruise ac,portable air cooler fan": return ["1.0 Ton", "Energy efficient", "Copper condenser"];
+        case "dell,acer": return ["15.6-inch", "8GB RAM", "256GB SSD"];
+        default: return ["Standard product"];
+      }
+    }
+
+    function getReviews(name) {
+      return [
+        "Great quality for the price!",
+        "Delivered on time. Satisfied.",
+        `Would recommend this ${name.toLowerCase()} to friends.`
+      ];
+    }
+
+    // Renders the current page of detailed product cards
+    function renderProducts() {
+      const listEl = document.getElementById('productList');
+      listEl.innerHTML = '';
+      const total = filteredProducts.length;
+      document.getElementById('totalCount').innerText = total;
+      const start = (currentPage - 1) * itemsPerPage;
+      const pageItems = filteredProducts.slice(start, start + itemsPerPage);
+
+      pageItems.forEach(p => {
+        const specs = getSpecifications(p.name);
+        const reviews = getReviews(p.name);
+
+        // build HTML for each detailed product card (inline, no popup)
+        const card = document.createElement('article');
+        card.className = 'product-card';
+
+        card.innerHTML = `
+          <div class="product-image">
+            <img src="${p.img}" alt="${p.name}" loading="lazy">
+            <div class="rating-container">
+              <img class="ratings" src="images/rating_4.5.png" alt="rating">
+              <div class="rating-count">5,242 ratings</div>
+            </div>
+            <div class="bought-count"><strong>5K+</strong> bought in past month</div>
+            <div style="margin-top:6px;">
+              <button class="btn deal-badge" style="border-radius:6px;padding:8px 12px;">Freedom Sale Deal</button>
+            </div>
+          </div>
+
+          <div class="product-details">
+            <div class="product-title">${p.name}</div>
+            <a class="product-brand-link" href="#" target="_blank">Visit the ${p.name} Store</a>
+
+            <div class="price-row">
+              <div class="price-current">₹${p.price.toLocaleString()}</div>
+              <div class="price-old">M.R.P: <del>₹${Math.round(p.price * 1.15).toLocaleString()}</del></div>
+              <div class="price-off">(${Math.floor((1 - p.price / (p.price * 1.15)) * 100)}% off)</div>
+            </div>
+
+            <ul class="specs-list">
+              ${specs.map(s => `<li>${s}</li>`).join('')}
+            </ul>
+
+            <div class="offers">Inclusive of all taxes — EMI starts at ₹${Math.max(99, Math.round(p.price / 20))} /month</div>
+            <div class="delivery-info">
+  Order placed on: <strong id="orderDate"></strong><br>
+  Time: <strong id="orderTime"></strong>
+</div>
+
+            <div class="stock">In Stock</div>
+
+<div class="actions">
+    <button class="btn btn-cart" onclick="addToCart(${p.id})">
+        Add to Cart
+    </button>
+
+    <button class="btn btn-buy" onclick="buyNow(${p.id})">
+        Buy Now
+    </button>
+
+    <button class="btn btn-wishlist" onclick="addToWishlist(${p.id})">
+        ❤ Wishlist
+    </button>
+</div>
+
+            <div style="margin-top:10px;">
+              <strong>Customer reviews:</strong>
+              <ul style="margin-top:6px; list-style:disc; padding-left:18px;">
+                ${reviews.map(r => `<li style="margin-bottom:4px;">${r}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+
+          <div class="product-side">
+            <p class="exchange">With Exchange: <span>Up to ₹${Math.round(p.price * 0.4).toLocaleString()}</span></p>
+            <p>Without Exchange: <span style="color: rgb(233,12,107); font-weight:700;">₹${p.price.toLocaleString()}</span></p>
+            <p><a href="update.html" style="font-size:13px; color:#0066cc;">Delivering to Chennai 600002 - Update location</a></p>
+            <div style="width:100%; margin-top:8px;">
+<button class="btn btn-cart" style="width:100%;" onclick="addToCart(${p.id})">
+    Add to Cart
+</button>
+
+<button class="btn btn-buy" style="width:100%;margin-top:8px;" onclick="buyNow(${p.id})">
+    Buy Now
+</button>
+
+<button class="btn btn-wishlist"
+style="width:100%;margin-top:8px;"
+onclick="addToWishlist(${p.id})">
+❤ Add to Wishlist
+</button>
+            </div>
+          </div>
+        `;
+
+        listEl.appendChild(card);
+      });
+
+      // showing counts
+      const showing = Math.min(filteredProducts.length, start + pageItems.length);
+      document.getElementById('showingCount').innerText = showing;
+
+      renderPagination();
+    }
+
+    // pagination UI
+    function renderPagination() {
+      const pagination = document.getElementById('pagination');
+      pagination.innerHTML = '';
+      const totalPages = Math.ceil(filteredProducts.length / itemsPerPage) || 1;
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.innerText = i;
+        if (i === currentPage) btn.style.background = '#f0f0f0';
+        btn.onclick = () => { currentPage = i; renderProducts(); window.scrollTo({ top: 100, behavior: 'smooth' }); };
+        pagination.appendChild(btn);
+      }
+    }
+
+    // search
+    function applySearch() {
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
+      if (!q) { filteredProducts = [...products]; }
+      else {
+        filteredProducts = products.filter(p =>
+          p.name.toLowerCase().includes(q)
+        );
+      }
+      currentPage = 1;
+      renderProducts();
+    }
+
+    // sort
+    function applySort() {
+      const sortVal = document.getElementById('sortSelect').value;
+      if (sortVal === 'priceLow') filteredProducts.sort((a, b) => a.price - b.price);
+      else if (sortVal === 'priceHigh') filteredProducts.sort((a, b) => b.price - a.price);
+      else filteredProducts = [...filteredProducts]; // default (do not change order)
+      currentPage = 1;
+      renderProducts();
+    }
+
+    // filter by comma-separated category names (case-insensitive, substring match)
+    function filterCategory(categoryName) {
+      const categories = categoryName.toLowerCase().split(',').map(s => s.trim());
+      filteredProducts = products.filter(p =>
+        categories.some(cat => p.name.toLowerCase().includes(cat))
+      );
+      currentPage = 1;
+      renderProducts();
+    }
+
+    function resetFilters() {
+      filteredProducts = [...products];
+      currentPage = 1;
+      document.getElementById('searchInput').value = '';
+      document.getElementById('sortSelect').value = 'default';
+      renderProducts();
+    }
+
+    // cart functions
+    function addToCart(id) {
+      let cartData = JSON.parse(localStorage.getItem(cartKey)) || [];
+      let product = products.find(p => p.id === id);
+      let existing = cartData.find(item => item.id === id);
+      if (existing) existing.qty += 1; else cartData.push({ ...product, qty: 1 });
+      const count = cartData.reduce((acc, item) => acc + item.qty, 0);
+      cartCount = count;
+      localStorage.setItem(cartKey, JSON.stringify(cartData));
+      localStorage.setItem(cartCountKey, cartCount);
+      updateCartIcon();
+      // small feedback: flash cart icon
+      flashCart();
+    }
+
+    function buyNow(id) {
+      // simple behaviour for demo: add to cart and go to cart.html (if exists)
+      addToCart(id);
+      // redirect (if cart.html exists in your project)
+      window.location.href = 'cart.html';
+    }
+
+    function updateCartIcon() {
+      const el = document.getElementById('cartIcon');
+      const cnt = Number(localStorage.getItem(cartCountKey)) || 0;
+      el.setAttribute('data-count', cnt);
+      // simple visual count appended
+      if (!el.querySelector('.count-bubble')) {
+        const span = document.createElement('span');
+        span.className = 'count-bubble';
+        span.style.cssText = 'background:#ffd54a;color:#111;padding:4px 8px;border-radius:12px;margin-left:8px;font-weight:700;font-size:13px;';
+        el.appendChild(span);
+      }
+      el.querySelector('.count-bubble').innerText = cnt;
+    }
+
+    function flashCart() {
+      const el = document.getElementById('cartIcon');
+      el.style.transform = 'scale(1.08)';
+      setTimeout(() => el.style.transform = 'scale(1)', 200);
+    }
+
+    // init
+    document.getElementById('totalCount').innerText = products.length;
+    renderProducts();
+
+    function updateDateTime() {
+      const now = new Date();
+
+      // Format date
+      const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const dateStr = now.toLocaleDateString(undefined, dateOptions);
+
+      // Format time
+      const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+      const timeStr = now.toLocaleTimeString(undefined, timeOptions);
+
+      // Insert into HTML
+      document.querySelectorAll('#orderDate').forEach(el => el.textContent = dateStr);
+      document.querySelectorAll('#orderTime').forEach(el => el.textContent = timeStr);
+    }
+
+    // Run immediately
+    updateDateTime();
+
+    // Update every second (optional)
+    setInterval(updateDateTime, 1000);
+
+    function addToWishlist(id) {
+
+      const user = JSON.parse(localStorage.getItem("currentUser"));
+
+      if (!user) {
+
+        alert("Please sign in first.");
+
+        window.location.href = "signin.html";
+
+        return;
+      }
+
+      let wishlist = JSON.parse(
+        localStorage.getItem("wishlist_" + user.email)
+      ) || [];
+
+      const product = products.find(p => p.id === id);
+
+      const already = wishlist.find(item => item.id === id);
+
+      if (already) {
+
+        alert("Already in Wishlist.");
+
+        return;
+      }
+
+      wishlist.push(product);
+
+      localStorage.setItem(
+        "wishlist_" + user.email,
+        JSON.stringify(wishlist)
+      );
+
+      alert("Added to Wishlist ❤");
+
+    }
+
+  </script>
+</body>
+
+</html>

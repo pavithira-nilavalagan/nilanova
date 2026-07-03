@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" type="image/png" href="images/download.png">
+  <title>Manage Orders | NilaNova</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    html,
+    body {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      /* Continuous window boundary overflow shield */
+      background: #f1f3f6;
+      color: #333;
+    }
+
+    /* ==========================================================================
+       2. FLUID HEADER ENGINE (INDEX-MATCHED STYLE)
+       ========================================================================== */
+    header {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      border-bottom: 2px solid purple;
+      box-shadow: 0 4px 20px rgba(128, 0, 128, 0.25);
+      padding: 15px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    .logo-text h3 {
+      font-size: 24px;
+      font-weight: 800;
+      background: linear-gradient(to right, purple, rgb(201, 3, 201), violet, rgb(201, 3, 201), purple);
+      background-size: 200% auto;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: animate-purple 2.5s linear infinite;
+    }
+
+    @keyframes animate-purple {
+      0% {
+        background-position: 0%;
+      }
+
+      100% {
+        background-position: 200%;
+      }
+    }
+
+    .header-menu {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+
+    .header-menu a {
+      color: black;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: bold;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s ease;
+    }
+
+    .header-menu a:hover {
+      color: purple;
+    }
+
+    .header-menu a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -5px;
+      width: 0;
+      height: 2px;
+      background: purple;
+      transition: width 0.3s;
+    }
+
+    .header-menu a:hover::after {
+      width: 100%;
+    }
+
+    .header-menu i {
+      font-size: 22px;
+    }
+
+    .cart-icon {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .cart-icon i {
+      font-size: 22px;
+      color: purple;
+    }
+
+    /* ==========================================================================
+       3. RESPONSIVE DASHBOARD LAYOUT
+       ========================================================================== */
+    .page-title {
+      font-size: 25px;
+      font-weight: 700;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 15px;
+      width: 100%;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      /* Default balanced split for wide displays */
+      [cite: 6] gap: 25px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px 40px 15px;
+      width: 100%;
+      align-items: start;
+    }
+
+    .orders-section,
+    .suggest-section {
+      width: 100%;
+      /* Columns auto-expand horizontally via parent css grid */
+    }
+
+    .order-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    /* Card Wrapper Blocks */
+    .order-box,
+    .suggest-box {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .order-header {
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+    }
+
+    .order-img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      border-radius: 6px;
+      background: #fff;
+      border: 1px solid #eee;
+    }
+
+    .order-title {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+
+    .order-details {
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 4px;
+    }
+
+    .status-pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+
+    .download-btn {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: #ffd54a;
+      border: 1px solid #a88734;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .download-btn:hover:not(:disabled) {
+      background: #f7c326;
+    }
+
+    .download-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .empty-note {
+      color: #666;
+      padding: 30px 10px;
+      text-align: center;
+    }
+
+    /* ==========================================================================
+       4. SUGGESTIONS MARKETPLACE GRID
+       ========================================================================== */
+    .suggest-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    /* Updated container for flex-wrapping items symmetrically */
+    .products-container-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+    }
+
+    .products_list {
+      position: relative;
+      background: #fafafa;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .products_list .offer {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: #ff3f6c;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .products_list .wishlist-icon {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: #ff3f6c;
+      cursor: pointer;
+    }
+
+    .product-img {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+
+    .products_list h5 {
+      font-size: 14px;
+      font-weight: 600;
+      margin: 4px 0;
+      line-height: 1.3;
+    }
+
+    .prices {
+      font-size: 14px;
+      font-weight: 700;
+      color: #111;
+      margin: 4px 0;
+    }
+
+    .old-price {
+      text-decoration: line-through;
+      color: #888;
+      font-size: 12px;
+      font-weight: 400;
+      margin-left: 4px;
+    }
+
+    .rating-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      margin: 4px 0 8px 0;
+    }
+
+    .ratings {
+      height: 12px;
+      object-fit: contain;
+    }
+
+    .rating-count {
+      font-size: 11px;
+      color: #666;
+    }
+
+    .add-btn {
+      width: 100%;
+      padding: 8px 12px;
+      background: #ff3f6c;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .add-btn:hover {
+      background: #e02f59;
+    }
+
+    /* ==========================================================================
+       5. THE ZERO-STRETCH RESPONSIVE ENGINE (BREAKPOINTS)
+       ========================================================================== */
+
+    /* Intermediate Viewports (Tablets / Notebooks - 950px and below) */
+    @media screen and (max-width: 950px) {
+      .layout {
+        grid-template-columns: 1fr;
+        /* Collapse left/right 50% split layout into stacked modules */
+        [cite: 6]
+      }
+    }
+
+    /* Mobile Devices (Smartphones - 500px and below) */
+    @media screen and (max-width: 500px) {
+      header {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+        padding: 15px;
+      }
+
+      .header-menu {
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .page-title {
+        font-size: 22px;
+        text-align: center;
+      }
+
+      .order-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .status-pill {
+        display: block;
+        margin: 6px auto 0 auto;
+        width: fit-content;
+      }
+
+      .download-btn {
+        width: 100%;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+
+      .products-container-grid {
+        grid-template-columns: 1fr;
+        /* Force suggestion cards to fully expand across mobile widths */
+      }
+    }
+
+    /* Absolute Micro-Screen Symmetrical Balancing (320px and below) */
+    @media screen and (max-width: 360px) {
+
+      html,
+      body,
+      .layout,
+      footer {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      .layout {
+        padding: 0 12px 30px 12px !important;
+        /* Perfect mirror balance on both sides */
+        gap: 15px;
+      }
+
+      .page-title {
+        padding: 15px 12px !important;
+        font-size: 20px !important;
+      }
+
+      .order-box,
+      .suggest-box {
+        padding: 12px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+
+
+  <header>
+    <div class="logo-text">
+      <h3>NilaNova</h3>
+    </div>
+
+    <nav class="header-menu">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="payment.html">Payment</a>
+      <a href="track.html">Track</a>
+
+      <div class="cart-icon">
+        <a href="cart.html">
+          <i class="ri-shopping-cart-2-line"></i>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <div class="page-title" style="font-weight: 700;font-size: 25px;">My Orders</div>
+
+  <div class="layout">
+
+    <!-- LEFT SIDE 50% -->
+    <div class="orders-section">
+      <div class="order-grid" id="orderList"></div>
+    </div>
+
+    <!-- RIGHT SIDE 50% - Suggested Products -->
+    <!-- RIGHT SIDE 50% - Suggested Products -->
+    <div class="suggest-section">
+      <div class="suggest-box">
+        <div class="suggest-title">Suggested for you</div>
+
+        <div class="products_list">
+          <div class="offer">11.64% OFF</div>
+          <i class="fas fa-heart wishlist-icon"></i>
+          <img src="images/Samsung.webp" alt="" class="product-img">
+          <h5>Galaxy MO5</h5>
+          <p class="prices">₹6,627 <span class="old-price">₹7,500</span></p>
+          <div class="rating-container">
+            <img src="images/rating_4.5.png" alt="" class="ratings">
+            <div class="rating-count">(2.1K)</div>
+          </div>
+          <a href="shop.html"><button class="add-btn">View Details</button></a>
+
+        </div>
+
+        <div class="products_list">
+          <div class="offer">20.04% OFF</div>
+          <i class="fas fa-heart wishlist-icon"></i>
+          <img src="images/Noise.webp" alt="" class="product-img">
+          <h5>Noise ColorFit Pro</h5>
+          <p class="prices">₹1,999 <span class="old-price">₹2,500</span></p>
+          <div class="rating-container">
+            <img src="images/rating_3.5.png" alt="" class="ratings">
+            <div class="rating-count">(209)</div>
+          </div>
+          <a href="shop.html"><button class="add-btn">View Details</button></a>
+        </div>
+
+        <div class="products_list">
+          <div class="offer">16.13% OFF</div>
+          <i class="fas fa-heart wishlist-icon"></i>
+          <img src="images/safari_bag.webp" alt="" height="150px" width="150px" style="padding: 20px;">
+          <h5>Safari Omega</h5>
+          <p class="prices">₹649 <span class="old-price">₹750</span></p>
+          <div class="rating-container">
+            <img src="images/rating_3.png" alt="" class="ratings">
+            <div class="rating-count">(100)</div>
+          </div>
+          <a href="shop.html"><button class="add-btn">View Details</button></a>
+        </div>
+
+        <!-- Add more products similarly -->
+      </div>
+    </div>
+
+
+
+  </div>
+
+  <footer
+    style="background-color: transparent; color: #fff; padding: 40px 20px; font-family: Arial, sans-serif; font-size: 14px; border-top: 2px solid purple; box-shadow: 0 0 20px purple;">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between;">
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Get to Know Us</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">About NilaNova</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Careers</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Press Releases</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">NilaNova Science</a></li>
+        </ul>
+      </div>
+
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Connect with Us</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">Facebook</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Twitter</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Instagram</a></li>
+        </ul>
+      </div>
+
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Make Money with Us</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">Sell on NilaNova</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Become an Affiliate</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Advertise Your Products</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Fulfilment by NilaNova</a></li>
+        </ul>
+      </div>
+
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Let Us Help You</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">Your Account</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Returns Centre</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">100% Purchase Protection</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Download NilaNova App</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Help</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <hr style="border: 0; height: 1px; background: black; margin: 20px 0;">
+
+    <div style="max-width: 1200px; margin: 0 auto; text-align: center; font-size: 12px; line-height: 30px;">
+      <p style="color: black;">
+        Conditions of Use & Sale | Privacy Notice | Interest-Based Ads
+      </p>
+      <p style="color: black;">
+        © 2026 NilaNova.com, Inc. or its affiliates
+      </p>
+    </div>
+  </footer>
+
+
+  <script>
+    /* (Your full JavaScript code unchanged — I kept everything same)
+       ✔ Orders
+       ✔ Refund
+       ✔ Remove
+       ✔ Receipt
+    */
+
+    // Check Login
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+    if (!currentUser) {
+      alert("Please sign in first.");
+      window.location.href = "signin.html";
+    }
+
+    // User Order Storage Key
+    const orderKey = "completedOrders_" + currentUser.email;
+
+    // Load Orders
+    let orders = JSON.parse(localStorage.getItem(orderKey)) || [];
+    function deliveryDaysFromShipping(cost) { const c = Number(cost); return c === 100 ? 1 : c === 50 ? 3 : 7; }
+    function formatDateFromDays(days) { const d = new Date(); d.setDate(d.getDate() + days); return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }); }
+
+    // --- download receipt ---
+    async function downloadReceipt(order) {
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF("p", "mm", "a4");
+
+      const qty = Number(order.qty || 1);
+      const price = Number(order.price || 0);
+      const shipping = Number(order.selectedShipping || 0);
+      const discount =
+        Number(order.discount) ||
+        Number(order.appliedDiscount) ||
+        Number(order.discountAmount) ||
+        Number(order.couponDiscount) ||
+        0;
+      const subtotal = price * qty;
+      const total = subtotal + shipping - discount;
+      const invoiceNo = "INV" + Date.now();
+      const billNo = "BILL" + Math.floor(100000 + Math.random() * 900000);
+      const txn = "TXN" + Math.floor(100000000 + Math.random() * 900000000);
+
+      const today = new Date().toLocaleDateString();
+
+      const delivery = formatDateFromDays(
+        deliveryDaysFromShipping(order.selectedShipping)
+      );
+
+      //==================== HEADER ====================
+
+      doc.setFillColor(128, 0, 128);
+      doc.rect(0, 0, 210, 28, "F");
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(24);
+      doc.setTextColor(255, 255, 255);
+      doc.text("NilaNova", 15, 15);
+
+      doc.setFontSize(11);
+      doc.text("Online Shopping Pvt Ltd", 15, 22);
+
+      doc.setFontSize(20);
+      doc.text("INVOICE", 170, 17, { align: "center" });
+
+      //==================== COMPANY ====================
+
+      doc.setTextColor(0, 0, 0);
+
+      doc.setFontSize(10);
+
+      doc.text("NilaNova Online Shopping Pvt Ltd", 14, 38);
+      doc.text("No.12 Anna Salai", 14, 43);
+      doc.text("Chennai - 600002", 14, 48);
+      doc.text("Tamil Nadu, India", 14, 53);
+      doc.text("GSTIN : 33ABCDE1234F1Z5", 14, 58);
+
+      doc.setFont("helvetica", "bold");
+
+      doc.text("Invoice No :", 140, 38);
+      doc.text(invoiceNo, 170, 38);
+
+      doc.text("Bill No :", 140, 44);
+      doc.text(billNo, 170, 44);
+
+      doc.text("Order ID :", 140, 50);
+      doc.text(order.id, 170, 50);
+
+      doc.text("Order Date :", 140, 56);
+      doc.text(today, 170, 56);
+
+      //==================== CUSTOMER ====================
+
+      doc.setDrawColor(180);
+
+      doc.roundedRect(14, 65, 182, 32, 2, 2);
+
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.text("Customer Details", 18, 73);
+
+      doc.setFont("helvetica", "normal");
+
+      doc.setFontSize(10);
+
+      // Load current user
+      const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+
+      // Load saved address
+      const address = JSON.parse(
+        localStorage.getItem("address_" + currentUser.email)
+      ) || {};
+
+      const customerName = address.fullName || currentUser.name || "Customer";
+
+      const customerAddress = [
+        address.house,
+        address.area,
+        address.landmark,
+        address.city,
+        address.state,
+        address.pincode
+      ].filter(Boolean).join(", ");
+
+      doc.text("Customer :", 18, 81);
+      doc.text(customerName, 48, 81);
+
+      doc.text("Mobile :", 18, 87);
+      doc.text(address.mobile || currentUser.phone || "-", 48, 87);
+
+      doc.text("Address :", 18, 93);
+
+      // Split long address into multiple lines automatically
+      const addressLines = doc.splitTextToSize(
+        customerAddress || "No Address Saved",
+        130
+      );
+      doc.text(addressLines, 48, 93);
+
+
+
+      //==================== TABLE ====================
+
+      doc.autoTable({
+
+        startY: 105,
+
+        head: [[
+          "Product",
+          "Qty",
+          "Price",
+          "Shipping",
+          "Discount",
+          "Total"
+        ]],
+
+        body: [[
+          order.name,
+          qty,
+          "Rs. " + price.toFixed(2),
+          "Rs. " + shipping.toFixed(2),
+          "Rs. " + discount.toFixed(2),
+          "Rs. " + total.toFixed(2)
+        ]],
+
+        theme: "grid",
+
+        headStyles: {
+          fillColor: [128, 0, 128],
+          textColor: 255,
+          fontStyle: "bold",
+          halign: "center"
+        },
+
+        styles: {
+          fontSize: 10,
+          cellPadding: 3,
+          halign: "center"
+        },
+
+        columnStyles: {
+          0: { halign: "left" }
+        }
+
+      });
+
+      //==================== PRICE SUMMARY ====================
+
+      let y = doc.lastAutoTable.finalY + 12;
+
+      doc.roundedRect(118, y, 78, 42, 2, 2);
+
+      doc.setFont("helvetica", "bold");
+
+      doc.text("Price Summary", 122, y + 8);
+
+      doc.setFont("helvetica", "normal");
+
+      doc.text("Subtotal", 122, y + 16);
+
+      doc.text("Rs. " + subtotal.toFixed(2), 190, y + 16, { align: "right" });
+
+      doc.text("Shipping", 122, y + 23);
+      doc.text("Rs. " + shipping.toFixed(2), 190, y + 23, { align: "right" });
+
+      doc.text("Discount", 122, y + 30);
+      doc.text("- Rs. " + discount.toFixed(2), 190, y + 30, { align: "right" });
+
+      doc.setFont("helvetica", "bold");
+
+      doc.setDrawColor(150);
+
+      doc.line(122, y + 34, 190, y + 34);
+
+      doc.text("Grand Total", 122, y + 40);
+
+      doc.setTextColor(128, 0, 128);
+      doc.text("Rs. " + total.toFixed(2), 190, y + 40, { align: "right" });
+
+      //==================== PAYMENT ====================
+
+      y += 55;
+
+      doc.setFillColor(235, 255, 235);
+
+      doc.roundedRect(14, y, 182, 28, 2, 2, "F");
+
+      doc.setTextColor(0, 120, 0);
+
+      doc.setFont("helvetica", "bold");
+
+      doc.text("PAYMENT SUCCESSFUL", 18, y + 8);
+
+      doc.setTextColor(0, 0, 0);
+
+      doc.setFont("helvetica", "normal");
+
+      doc.text("Payment Mode : " + order.paymentMethod.toUpperCase(), 18, y + 16);
+
+      doc.text("Transaction ID : " + txn, 18, y + 22);
+
+      //==================== DELIVERY ====================
+
+      y += 38;
+
+      doc.setFillColor(240, 248, 255);
+
+      doc.roundedRect(14, y, 182, 22, 2, 2, "F");
+
+      doc.setFont("helvetica", "bold");
+
+      doc.text("Expected Delivery", 18, y + 8);
+
+      doc.setFont("helvetica", "normal");
+
+      doc.text(delivery, 18, y + 16);
+
+      //==================== FOOTER ====================
+
+      doc.setFillColor(128, 0, 128);
+
+      doc.rect(0, 275, 210, 22, "F");
+
+      doc.setTextColor(255, 255, 255);
+
+      doc.setFont("helvetica", "bold");
+
+      doc.text("Thank You For Shopping With NilaNova!", 105, 284, { align: "center" });
+
+      doc.setFontSize(9);
+
+      doc.text("Customer Care : +91 9876543210", 15, 291);
+
+      doc.text("support@nilanova.com", 90, 291);
+
+      doc.text("www.nilanova.com", 160, 291);
+
+      doc.save(order.id + "_Invoice.pdf");
+
+    }
+    function removeOrder(orderId) {
+      if (confirm("Are you sure you want to remove this order?")) {
+        orders = orders.filter(o => o.id !== orderId);
+        localStorage.setItem(
+          orderKey,
+          JSON.stringify(orders)
+        ); renderOrders();
+      }
+    }
+
+    function requestRefund(orderId) {
+      let order = orders.find(o => o.id === orderId);
+      if (!order) return;
+      if (order.refundRequested) return;
+
+      const reason = prompt(`You already paid ₹${order.price || 0} online.\nPlease explain why you want a refund:`);
+
+      if (reason && reason.trim() !== "") {
+        alert("Your refund request has been submitted.\nAmount will be refunded within 2 days.");
+
+        order.refundRequested = true;
+        order.refundReason = reason.trim();
+        localStorage.setItem(
+          orderKey,
+          JSON.stringify(orders)
+        ); renderOrders();
+      }
+    }
+
+    function renderOrders() {
+      const container = document.getElementById('orderList');
+      container.innerHTML = '';
+
+      if (!orders.length) {
+        container.innerHTML = '<div class="empty-note">No orders placed yet.</div>';
+        return;
+      }
+
+      orders.forEach(order => {
+        const delivery = formatDateFromDays(deliveryDaysFromShipping(order.selectedShipping));
+        const payment = order.paymentMethod.toLowerCase();
+        const paidOnline = payment === 'upi' || payment === 'card';
+
+        const badgeText = order.refundRequested ? "Refund Requested" : paidOnline ? "Paid Online" : "Paid";
+        const badgeColor = order.refundRequested
+          ? "background:#c8f7c5;color:#0a6b2e;"
+          : "background:#e8f4ea;color:#0a6b2e;";
+
+        container.insertAdjacentHTML('beforeend', `
+      <div class="order-box">
+        <div class="order-header">
+          <img src="${order.img}" class="order-img">
+
+          <div style="flex:1">
+            <div class="order-title">
+              ${order.name}
+              <span class="status-pill" style="${badgeColor}">${badgeText}</span>
+            </div>
+
+            <div class="order-details">Order ID: <b>${order.id}</b></div>
+            <div class="order-details">Payment Method: <b>${order.paymentMethod}</b></div>
+            <div class="order-details">Expected Delivery: <b>${delivery}</b></div>
+
+            ${order.refundRequested
+            ? `<div class="order-details" style="color:#0a6b2e;margin-top:6px;">
+                   <b>Refund Reason:</b> ${order.refundReason}
+                 </div>
+                 <button class="download-btn" style="background:#4caf50;color:#fff;margin-top:8px;" disabled>
+                   Refund in 2 Days
+                 </button>`
+            : paidOnline
+              ? `<button class="download-btn" onclick='downloadReceipt(${JSON.stringify(order)})'>Download Receipt</button>
+                   <button class="download-btn" style="background:#f44336;color:#fff;margin-left:8px;" onclick='requestRefund("${order.id}")'>
+                     Request Refund
+                   </button>`
+              : ``
+          }
+
+            <button class="download-btn" style="background:#9e9e9e;color:#fff;margin-top:10px;" onclick='removeOrder("${order.id}")'>
+              Remove Order
+            </button>
+          </div>
+        </div>
+      </div>
+    `);
+      });
+    }
+
+    renderOrders();
+
+    function addToCart(name, price, img) {
+      const cartKey = "cart_" + currentUser.email;
+
+      let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+      cart.push({
+        name: name,
+        price: price,
+        img: img,
+        qty: 1,
+        discount: Number(localStorage.getItem("discount_" + currentUser.email) || 0)
+      });
+
+      localStorage.setItem(
+        cartKey,
+        JSON.stringify(cart)
+      );
+      alert(name + " added to cart!");
+    }
+
+  </script>
+
+</body>
+
+</html>

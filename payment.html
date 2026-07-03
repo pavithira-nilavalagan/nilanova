@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" type="image/png" href="images/download.png">
+  <title>Checkout & Payment | NilaNova</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+  <style>
+* {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    html, body {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden; /* Complete protection from asymmetric side-scrolling */
+      background: #f1f3f6;
+      color: #333;
+    }
+
+    /* ==========================================================================
+       2. FLUID HEADER ENGINE (INDEX-MATCHED STYLE)
+       ========================================================================== */
+    header {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      border-bottom: 2px solid purple;
+      box-shadow: 0 4px 20px rgba(128, 0, 128, 0.25);
+      padding: 15px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    .logo-text h3 {
+      font-size: 24px;
+      font-weight: 800;
+      background: linear-gradient(to right, purple, rgb(201, 3, 201), violet, rgb(201, 3, 201), purple);
+      background-size: 200% auto;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: animate-purple 2.5s linear infinite;
+    }
+
+    @keyframes animate-purple {
+      0% { background-position: 0%; }
+      100% { background-position: 200%; }
+    }
+
+    .header-menu {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+
+    .header-menu a {
+      color: black;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: bold;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s ease;
+    }
+
+    .header-menu a:hover { color: purple; }
+
+    .header-menu a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -5px;
+      width: 0;
+      height: 2px;
+      background: purple;
+      transition: width 0.3s;
+    }
+
+    .header-menu a:hover::after { width: 100%; }
+    .header-menu i { font-size: 22px; }
+
+    .cart-icon {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .cart-icon i {
+      font-size: 22px;
+      color: purple;
+    }
+
+    /* ==========================================================================
+       3. RESPONSIVE CHECKOUT CONTAINER & BLOCKS
+       ========================================================================== */
+    .page-title {
+      font-size: 25px;
+      font-weight: 700;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 15px;
+      width: 100%;
+    }
+
+    .checkout-grid {
+      display: grid;
+      grid-template-columns: 1fr 350px; /* Symmetrical two-column distribution */
+      gap: 25px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px 40px 15px;
+      width: 100%;
+      align-items: start;
+    }
+
+    .payment-items-box,
+    .payment-summary {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .payment-summary {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      height: fit-content;
+    }
+
+    .payment-items-box { min-height: 150px; }
+
+    /* Itemized Card Units */
+    .payment-item {
+      background: #fafafa;
+      border: 1px solid #e0e0e0;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+    }
+
+    .payment-item:last-of-type { margin-bottom: 0; }
+
+    .payment-item-header {
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+    }
+
+    .payment-img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      border-radius: 6px;
+      background: #fff;
+      border: 1px solid #eee;
+    }
+
+    .payment-item-title {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+
+    .payment-item-price {
+      font-size: 15px;
+      color: #b12704;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .payment-method-box {
+      background: #f7f7f7;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      margin-top: 15px;
+    }
+
+    .payment-method-box label {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      cursor: pointer;
+      margin-top: 8px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    
+    .payment-method-box label:first-of-type { margin-top: 0; }
+
+    .payment-method-box input[type="radio"] {
+      accent-color: purple;
+      width: 16px;
+      height: 16px;
+    }
+
+    .method-details {
+      margin-left: 26px;
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .payment-summary-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .payment-summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+      font-size: 14px;
+    }
+
+    .total-row {
+      font-size: 18px;
+      font-weight: 700;
+      color: rgb(177, 39, 4);
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #ddd;
+    }
+
+    .pay-button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px 0;
+      background: #ffd54a;
+      border: 1px solid #a88734;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .pay-button:hover:not(:disabled) { background: #f7c326; }
+
+    .pay-button:disabled {
+      background: #ccc;
+      border-color: #bbb;
+      color: #777;
+      cursor: not-allowed;
+    }
+
+    /* ==========================================================================
+       4. STATUS BADGES & INTERACTIVE POPUPS
+       ========================================================================== */
+    .status-pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #e8f4ea;
+      color: #0a6b2e;
+      margin-left: 10px;
+    }
+
+    .status-wait {
+      background: #fff4e5;
+      color: #7a4b00;
+    }
+
+    .empty-note {
+      color: #666;
+      padding: 30px 10px;
+      text-align: center;
+    }
+
+    .popup-bg {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 15px;
+    }
+
+    .popup-box {
+      width: 100%;
+      max-width: 360px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: left;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .popup-box h3 {
+      margin-bottom: 12px;
+      font-size: 18px;
+    }
+
+    .popup-box input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .popup-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      background: purple;
+      color: #fff;
+    }
+
+    .btn-muted {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    /* ==========================================================================
+       5. THE ZERO-STRETCH RESPONSIVE ENGINE (BREAKPOINTS)
+       ========================================================================== */
+
+    /* Mid-range Viewports (Tablets / Small Laptops - 950px and below) */
+    @media screen and (max-width: 950px) {
+      .checkout-grid {
+        grid-template-columns: 1fr; /* Drop summary container smoothly below listings */
+      }
+    }
+
+    /* Mobile Devices (Smartphones - 500px and below) */
+    @media screen and (max-width: 500px) {
+      header {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+        padding: 15px;
+      }
+      .header-menu {
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .page-title {
+        font-size: 22px;
+        text-align: center;
+      }
+      .payment-item-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .status-pill {
+        display: block;
+        margin: 6px auto 0 auto;
+        width: fit-content;
+      }
+    }
+
+    /* Absolute Micro-Screen Symmetrical Balancing (320px and below) */
+    @media screen and (max-width: 360px) {
+      html, body, .checkout-grid, footer {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      .checkout-grid {
+        padding: 0 12px 30px 12px !important; /* Perfect mirror balance on both sides */
+        gap: 15px;
+      }
+
+      .page-title {
+        padding: 15px 12px !important;
+        font-size: 20px !important;
+        text-align: center;
+      }
+
+      .payment-items-box, .payment-summary {
+        padding: 12px !important;
+      }
+
+      .payment-item {
+        padding: 10px !important;
+      }
+
+      .method-details {
+        margin-left: 26px;
+        font-size: 12px;
+      }
+
+      /* Stack popup input elements vertically cleanly */
+      .popup-box {
+        padding: 15px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+
+
+
+  <header>
+    <div class="logo-text">
+      <h3>NilaNova</h3>
+    </div>
+
+    <nav class="header-menu">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="order.html">Orders</a>
+      <a href="track.html">Track</a>
+
+      <div class="cart-icon">
+      <a href="cart.html">
+        <i class="ri-shopping-cart-2-line"></i>
+      </a>
+      </div>
+    </nav>
+  </header>
+
+  <div class="page-title" style="font-weight: 700;font-size: 25px;">Payment</div>
+
+  <div class="checkout-grid">
+    <div class="payment-items-box" id="paymentItems"></div>
+
+    <div class="payment-summary">
+      <div class="payment-summary-title">Order Summary</div>
+      <div class="payment-summary-row">
+        <div>Items (COD only):</div>
+        <div id="itemsTotal">₹0</div>
+      </div>
+      <div class="payment-summary-row">
+        <div>Shipping:</div>
+        <div id="shippingTotal">₹0</div>
+      </div>
+      <div class="payment-summary-row">
+        <div>Discount:</div>
+        <div id="discountTotal">₹0</div>
+      </div>
+      <div class="payment-summary-row total-row">
+        <div>Total payable:</div>
+        <div id="payableTotal">₹0</div>
+      </div>
+
+      <button id="payBtn" class="pay-button" disabled onclick="finalPay()">Pay Now</button>
+    </div>
+  </div>
+
+  <div class="popup-bg" id="popupBg" aria-hidden="true">
+    <div class="popup-box" id="popupBox"></div>
+  </div>
+
+  <footer
+    style="background-color: transparent; color: #fff; padding: 40px 20px; font-family: Arial, sans-serif; font-size: 14px; border-top: 2px solid purple; box-shadow: 0 0 20px purple;">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between;">
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Get to Know Us</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">About NilaNova</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Careers</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Press Releases</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">NilaNova Science</a></li>
+        </ul>
+      </div>
+
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Connect with Us</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">Facebook</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Twitter</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Instagram</a></li>
+        </ul>
+      </div>
+
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Make Money with Us</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">Sell on NilaNova</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Become an Affiliate</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Advertise Your Products</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Fulfilment by NilaNova</a></li>
+        </ul>
+      </div>
+
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Let Us Help You</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">Your Account</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Returns Centre</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">100% Purchase Protection</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Download NilaNova App</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Help</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <hr style="border: 0; height: 1px; background: black; margin: 20px 0;">
+
+    <div style="max-width: 1200px; margin: 0 auto; text-align: center; font-size: 12px; line-height: 30px;">
+      <p style="color: black;">
+        Conditions of Use & Sale | Privacy Notice | Interest-Based Ads
+      </p>
+      <p style="color: black;">
+        © 2026 NilaNova.com, Inc. or its affiliates
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // Check Login
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+
+    if (!user) {
+      alert("Please sign in first.");
+      window.location.href = "signin.html";
+    }
+
+    // LocalStorage Keys
+    const cartKey = "cart_" + user.email;
+    const orderKey = "completedOrders_" + user.email;
+    const finalOrderKey = "finalOrder_" + user.email;
+    const discountKey = "discount_" + user.email;
+
+    // Load Current User Data
+    let order = JSON.parse(localStorage.getItem("finalOrder_" + user.email)) || [];
+    let discount = Number(localStorage.getItem(discountKey) || 0);
+
+    const paymentSelection = {};
+    const paymentStatus = {};
+
+    function deliveryDaysFromShipping(cost) {
+      const c = Number(cost);
+      return c === 100 ? 1 : c === 50 ? 3 : 7;
+    }
+    function formatDateFromDays(days) {
+      const d = new Date();
+      d.setDate(d.getDate() + days);
+      return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    }
+    function updatePayButtonState() {
+      document.getElementById('payBtn').disabled = !order.every((_, idx) => !!paymentStatus[idx]);
+      renderOrderSummary();
+    }
+
+    // mark item as paid
+    function markItemPaid(idx) {
+      paymentStatus[idx] = true;
+      renderItemStatus(idx);
+      updatePayButtonState();
+      closePopup();
+    }
+
+    function openPopup(html) {
+      const box = document.getElementById('popupBox');
+      box.innerHTML = html;
+      document.getElementById('popupBg').style.display = 'flex';
+      document.getElementById('popupBg').setAttribute('aria-hidden', 'false');
+    }
+    function closePopup() {
+      document.getElementById('popupBg').style.display = 'none';
+      document.getElementById('popupBg').setAttribute('aria-hidden', 'true');
+    }
+
+    // select payment method
+    function selectMethod(idx, method) {
+      paymentSelection[idx] = method;
+      if (method === 'cod') { // COD immediate
+        paymentStatus[idx] = true;
+        renderItemStatus(idx);
+        updatePayButtonState();
+        return;
+      }
+      paymentStatus[idx] = false;
+      renderItemStatus(idx);
+      updatePayButtonState();
+      if (method === 'upi') openDetailsPopup(idx, 'UPI');
+      if (method === 'card') openDetailsPopup(idx, 'Card');
+    }
+
+    // --- STEP 1: Details popup ---
+    function openDetailsPopup(idx, type) {
+      openPopup(`<h3>Enter ${type} Details</h3>
+    ${type === 'UPI'
+          ? '<input id="upiId" placeholder="Enter UPI ID" />'
+          : '<input id="cardNum" placeholder="Card Number ex. 4111 1111 1111 1111" maxlength="16" /><input id="cardExpiry" placeholder="MM/YY" maxlength="5" /><input id="cardCVV" placeholder="CVV" maxlength="3" />'
+        }
+    <div class="popup-actions">
+      <button class="btn btn-muted" onclick="closePopup()">Cancel</button>
+      <button class="btn btn-primary" onclick="sendOTP(${idx},'${type}')">Send OTP</button>
+    </div>`);
+    }
+
+    // --- STEP 2: Send OTP, then show OTP popup ---
+    function sendOTP(idx, type) {
+      let valid = false;
+      if (type === 'UPI') {
+        valid = !!document.getElementById('upiId').value.trim();
+      }
+      if (type === 'Card') {
+        const num = document.getElementById('cardNum').value.trim();
+        const exp = document.getElementById('cardExpiry').value.trim();
+        const cvv = document.getElementById('cardCVV').value.trim();
+        valid = num.length === 16 && exp && cvv.length === 3;
+      }
+      if (!valid) { alert('Please enter valid ' + type + ' details.'); return; }
+      openOTPPopup(idx, type);
+    }
+
+    // --- OTP popup ---
+    function openOTPPopup(idx, type) {
+      openPopup(`<h3>${type} Payment Demo</h3>
+    <p>Enter OTP <b>123456</b> for <b>${order[idx].name}</b></p>
+    <input id="otpInput" placeholder="Enter OTP" maxlength="6" />
+    <div class="popup-actions">
+      <button class="btn btn-muted" onclick="closePopup()">Cancel</button>
+      <button class="btn btn-primary" onclick="verifyOTP(${idx})">Submit</button>
+    </div>`);
+    }
+
+    function verifyOTP(idx) {
+      const otp = document.getElementById('otpInput').value.trim();
+      if (otp !== '123456') { alert('Incorrect OTP!'); return; }
+      alert('Payment successful for ' + order[idx].name + ' (demo)');
+      markItemPaid(idx);
+    }
+
+    // render status pill
+    function renderItemStatus(idx) {
+      const statusEl = document.getElementById('status-pill-' + idx);
+      const radios = document.querySelectorAll(`input[name="pay-${idx}"]`);
+      if (!statusEl) return;
+
+      if (paymentStatus[idx]) {
+        statusEl.innerText = 'Paid';
+        statusEl.className = 'status-pill';
+        // disable payment options
+        radios.forEach(r => r.disabled = true);
+      } else {
+        statusEl.innerText = paymentSelection[idx] ? 'Awaiting OTP' : 'No method selected';
+        statusEl.className = 'status-pill status-wait';
+        // enable options if not paid
+        radios.forEach(r => r.disabled = false);
+      }
+    }
+
+
+    // render items
+    function renderPaymentPage() {
+      const container = document.getElementById('paymentItems');
+      container.innerHTML = '';
+      if (!order.length) { container.innerHTML = '<div class="empty-note">No items to pay for.</div>'; return; }
+      order.forEach((item, idx) => {
+        item.price = Number(item.price) || 0;
+        item.qty = Number(item.qty) || 1;
+        item.selectedShipping = Number(item.selectedShipping) || 0;
+        if (paymentSelection[idx] === undefined) paymentSelection[idx] = '';
+        if (paymentStatus[idx] === undefined) paymentStatus[idx] = false;
+        const delivery = formatDateFromDays(deliveryDaysFromShipping(item.selectedShipping));
+        container.insertAdjacentHTML('beforeend', `
+      <div class="payment-item" id="item-${idx}">
+        <div class="payment-item-header">
+          <img src="${item.img || ''}" class="payment-img" alt="${item.name || ''}">
+          <div style="flex:1">
+            <div class="payment-item-title">${item.name}<span id="status-pill-${idx}" class="status-pill" style="margin-left:12px;">${paymentStatus[idx] ? 'Paid' : 'No method selected'}</span></div>
+            <div class="payment-item-price">₹${item.price} × ${item.qty} = ₹${(item.price * item.qty).toFixed(2)}</div>
+            <div style="font-size:13px;color:#555;">Shipping: ₹${item.selectedShipping.toFixed(2)}</div>
+            <div style="font-size:13px;color:#333;margin-top:6px;">Expected delivery: <b>${delivery}</b></div>
+          </div>
+        </div>
+        <div class="payment-method-box">
+          <label><input type="radio" name="pay-${idx}" onchange="selectMethod(${idx},'cod')" ${paymentSelection[idx] === 'cod' ? 'checked' : ''}> Cash on Delivery</label>
+          <div class="method-details">Pay with cash at doorstep.</div>
+          <label><input type="radio" name="pay-${idx}" onchange="selectMethod(${idx},'upi')" ${paymentSelection[idx] === 'upi' ? 'checked' : ''}> UPI</label>
+          <div class="method-details">Demo UPI OTP payment (123456).</div>
+          <label><input type="radio" name="pay-${idx}" onchange="selectMethod(${idx},'card')" ${paymentSelection[idx] === 'card' ? 'checked' : ''}> Card</label>
+          <div class="method-details">Demo Card OTP payment (123456).</div>
+        </div>
+      </div>`);
+        renderItemStatus(idx);
+      });
+      updatePayButtonState();
+    }
+
+    // only COD amount shown in summary
+    function renderOrderSummary() {
+      let itemsTotal = 0, shippingTotal = 0;
+
+      order.forEach((item, idx) => {
+        const qty = Number(item.qty) || 0;
+        const price = Number(item.price) || 0;
+        const shipping = Number(item.selectedShipping) || 0;
+
+        // include ALL items regardless of payment method
+        if (paymentSelection[idx]) {
+          itemsTotal += price * qty;
+          shippingTotal += shipping;
+        }
+      });
+
+      // ✅ safe discount handling
+      let safeDiscount = parseFloat(discount);
+      if (isNaN(safeDiscount)) safeDiscount = 0;
+
+      const payable = (itemsTotal - safeDiscount) + shippingTotal;
+
+      document.getElementById('itemsTotal').innerText =
+        '₹' + itemsTotal.toFixed(2);
+
+      document.getElementById('shippingTotal').innerText =
+        '₹' + shippingTotal.toFixed(2);
+
+      document.getElementById('discountTotal').innerText =
+        '-₹' + safeDiscount.toFixed(2);
+
+      document.getElementById('payableTotal').innerText =
+        '₹' + (payable < 0 ? 0 : payable).toFixed(2);
+    }
+
+    function finalPay() {
+
+      if (!order.every((_, idx) => paymentStatus[idx])) {
+        alert("Complete all payment steps first.");
+        return;
+      }
+
+      const now = new Date();
+
+      const orderDate = now.toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+      });
+
+      // Load only this user's completed orders
+      let completedOrders =
+        JSON.parse(localStorage.getItem(orderKey)) || [];
+
+      const uniqueOrderId =
+        "ORD" + Math.floor(Date.now() / 1000);
+
+      order.forEach((item, index) => {
+
+        completedOrders.push({
+
+          id: uniqueOrderId,
+
+          userEmail: user.email,
+
+          customerName: user.name,
+
+          name: item.name,
+
+          img: item.img,
+
+          qty: item.qty,
+
+          price: item.price,
+
+          orderDate: orderDate,
+
+          paymentMethod: paymentSelection[index],
+
+          selectedShipping: item.selectedShipping,
+
+          delivery: item.delivery,
+
+          discount: Number(discount),
+
+          expectedDelivery:
+            formatDateFromDays(
+              deliveryDaysFromShipping(item.selectedShipping)
+            )
+
+        });
+
+      });
+
+      // Save only this user's orders
+      localStorage.setItem(
+        orderKey,
+        JSON.stringify(completedOrders)
+      );
+
+      alert("All payments complete! Order placed 🎉");
+
+      // Clear only this user's data
+      localStorage.removeItem(cartKey);
+      localStorage.removeItem(finalOrderKey);
+
+      window.location.href = "order.html";
+    }
+
+
+    renderPaymentPage();
+    document.getElementById('popupBg').addEventListener('click', e => { if (e.target === e.currentTarget) closePopup(); });
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In | NilaNova</title>
+
+    <link rel="stylesheet" href="css/auth.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="auth-container">
+
+        <div class="logo">
+            <h1>NilaNova</h1>
+            <p>Sign in to your account</p>
+        </div>
+
+        <form id="signinForm">
+
+            <div class="input-box">
+                <label>Email Address</label>
+
+                <input
+                    type="email"
+                    id="loginEmail"
+                    placeholder="Enter your email"
+                    required>
+            </div>
+
+            <div class="input-box">
+
+                <label>Password</label>
+
+                <div class="password-box">
+
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        placeholder="Enter your password"
+                        required>
+
+                    <i class="ri-eye-line toggle"
+                        onclick="togglePassword('loginPassword',this)"></i>
+
+                </div>
+
+            </div>
+
+            <div class="remember-row">
+
+                <label class="remember">
+
+                    <input type="checkbox" id="remember">
+
+                    Remember Me
+
+                </label>
+
+                <a href="#" class="forgot">
+                    Forgot Password?
+                </a>
+
+            </div>
+
+            <button class="btn">
+                Sign In
+            </button>
+
+        </form>
+
+        <div class="divider">
+            New to NilaNova?
+        </div>
+
+        <a href="signup.html" class="secondary-btn">
+            Create your NilaNova account
+        </a>
+
+    </div>
+
+    <script src="js/auth.js"></script>
+
+</body>
+
+</html>

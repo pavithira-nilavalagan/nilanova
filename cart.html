@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="images/download.png">
+  <title>Shopping Cart - Secure Checkout | NilaNova</title>
+
+  <style>
+   /* ==========================================================================
+       1. GLOBAL ANTIFRAGILE CONFIG
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    html, body {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden; /* Total protection against side-scrolling layouts */
+      background: #f1f3f6;
+      color: #333;
+    }
+
+    /* ==========================================================================
+       2. FLUID HEADER ENGINE (INDEX-MATCHED STYLE)
+       ========================================================================== */
+    header {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      border-bottom: 2px solid purple;
+      box-shadow: 0 4px 20px rgba(128, 0, 128, 0.25);
+      padding: 15px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    .logo-text h3 {
+      font-size: 24px;
+      font-weight: 800;
+      background: linear-gradient(to right, purple, rgb(201, 3, 201), violet, rgb(201, 3, 201), purple);
+      background-size: 200% auto;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: animate-purple 2.5s linear infinite;
+    }
+
+    @keyframes animate-purple {
+      0% { background-position: 0%; }
+      100% { background-position: 200%; }
+    }
+
+    .header-menu {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+
+    .header-menu a {
+      color: black;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: bold;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s ease;
+    }
+
+    .header-menu a:hover { color: purple; }
+
+    .header-menu a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -5px;
+      width: 0;
+      height: 2px;
+      background: purple;
+      transition: width 0.3s;
+    }
+
+    .header-menu a:hover::after { width: 100%; }
+
+    /* ==========================================================================
+       3. RESPONSIVE CHECKOUT CONTAINER
+       ========================================================================== */
+    .page-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: #111;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 15px;
+      width: 100%;
+    }
+
+    .checkout-grid {
+      display: grid;
+      grid-template-columns: 1fr 350px; /* Two-column grid layout for desktop environments */
+      gap: 25px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px 40px 15px;
+      width: 100%;
+      align-items: start;
+    }
+
+    .order-summary {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .payment-summary {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      height: fit-content;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .payment-summary-title {
+      font-weight: 600;
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+
+    /* ==========================================================================
+       4. CART ITEM ITEMIZATION GRID RE-ENGINEERING
+       ========================================================================== */
+    .cart-item-container {
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+
+    .cart-item-container:last-of-type {
+      border-bottom: none;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+
+    .delivery-date {
+      color: #007600;
+      font-weight: 600;
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+
+    /* Fixed rigid layout to dynamically auto-wrap columns safely */
+    .cart-item-details-grid {
+      display: grid;
+      grid-template-columns: 120px 1fr 240px;
+      gap: 20px;
+    }
+
+    .product-image {
+      width: 100%;
+      max-width: 120px;
+      height: auto;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    .product-name {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    .product-price {
+      font-size: 16px;
+      color: #b12704;
+      margin-top: 5px;
+      font-weight: 700;
+    }
+
+    .product-quantity {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .link-primary {
+      color: #007185;
+      cursor: pointer;
+      margin-left: 8px;
+      text-decoration: none;
+    }
+    
+    .link-primary:hover {
+      text-decoration: underline;
+      color: #c45500;
+    }
+
+    .delivery-options-title {
+      font-weight: 600;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .delivery-option {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: start;
+      gap: 10px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .delivery-option input[type="radio"] {
+      accent-color: purple;
+      margin-top: 3px;
+      width: 16px;
+      height: 16px;
+    }
+
+    .delivery-option-date {
+      font-weight: 600;
+      color: #007600;
+    }
+
+    .delivery-option-price {
+      color: rgb(110, 110, 110);
+      margin-top: 2px;
+    }
+
+    /* ==========================================================================
+       5. COMPACT INTERACTIVE COMPONENTS
+       ========================================================================== */
+    .payment-summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+      font-size: 14px;
+    }
+
+    .subtotal-row {
+      border-top: 1px solid #ddd;
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+
+    .total-row {
+      font-size: 18px;
+      font-weight: 700;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #ddd;
+    }
+
+    .place-order-button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px 0;
+      background: #ffd54a;
+      border: 1px solid #a88734;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .place-order-button:hover {
+      background: #f7c326;
+    }
+
+    .coupon-box {
+      margin-top: 15px;
+      padding: 12px;
+      background: #f7f7f7;
+      border-radius: 6px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .coupon-box input {
+      padding: 8px;
+      flex: 1;
+      min-width: 0;
+      border: 1px solid #bbb;
+      border-radius: 4px;
+    }
+
+    .coupon-box button {
+      padding: 8px 16px;
+      background: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* ==========================================================================
+       6. THE ZERO-STRETCH RESPONSIVE ENGINE (BREAKPOINTS)
+       ========================================================================== */
+
+/* ==========================================================================
+   THE ZERO-STRETCH RESPONSIVE ENGINE (BREAKPOINTS)
+   ========================================================================== */
+
+/* Mid-range Viewports (Tablets / Small Laptops - 950px and below) */
+@media screen and (max-width: 950px) {
+  .checkout-grid {
+    grid-template-columns: 1fr !important; /* Forces the summary box to stack cleanly underneath */
+  }
+  .payment-summary {
+    position: static;
+    width: 100% !important;
+  }
+}
+
+/* Low-Tier Viewports (Compact Tablets & Large Phones - 700px and below) */
+@media screen and (max-width: 700px) {
+  .cart-item-details-grid {
+    grid-template-columns: 100px 1fr !important;
+    gap: 15px !important;
+  }
+  .delivery-options {
+    grid-column: span 2 !important;
+    background: #f9f9f9;
+    padding: 12px;
+    border-radius: 6px;
+    margin-top: 5px;
+    width: 100% !important; /* Shuts down horizontal overflows */
+  }
+}
+
+/* Mobile Devices (Smartphones - 500px and below) */
+@media screen and (max-width: 500px) {
+  header {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+    padding: 15px !important;
+  }
+  .header-menu {
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .page-title {
+    font-size: 22px;
+    text-align: center;
+    padding: 15px !important;
+  }
+  .cart-item-details-grid {
+    grid-template-columns: 1fr !important;
+    justify-items: center;
+    text-align: center;
+    width: 100% !important;
+  }
+  .product-image {
+    max-width: 140px;
+  }
+  .delivery-options {
+    grid-column: span 1 !important;
+    text-align: left;
+    width: 100% !important;
+  }
+}
+
+/* Absolute Micro-Screen Symmetry Fix (320px and below) */
+@media screen and (max-width: 360px) {
+  /* Enforce unbending boundaries everywhere */
+  html, body, main, .checkout-grid, footer {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Reset symmetric margins and padding to match both sides flawlessly */
+  .checkout-grid {
+    padding: 0 12px 30px 12px !important; /* Mirrored 12px margins */
+    gap: 15px !important;
+  }
+
+  .page-title {
+    font-size: 20px !important;
+    padding: 15px 12px !important; /* Mirrored 12px margins */
+  }
+
+  .order-summary, .payment-summary {
+    padding: 12px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Structural override for coupon elements to stop breaking boundaries */
+  .coupon-box {
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 6px !important;
+  }
+
+  .coupon-box input {
+    width: 100% !important; /* Replaces rigid widths with dynamic container matching */
+  }
+
+  .coupon-box button {
+    width: 100% !important;
+  }
+
+  /* Footer inline-style override engine */
+  footer {
+    padding: 30px 12px !important; /* Explicitly forces right side margin to match left */
+  }
+  
+  footer > div {
+    gap: 15px !important;
+  }
+
+  footer > div > div {
+    flex: 1 1 100% !important; /* Stacks text to fully utilize narrow viewports evenly */
+    min-width: 0 !important;
+  }
+}
+  </style>
+</head>
+
+<body>
+
+
+
+  <header>
+    <div class="logo-text">
+      <h3>NilaNova</h3>
+    </div>
+
+    <nav class="header-menu">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="payment.html">Payment</a>
+      <a href="order.html">Orders</a>
+      <a href="track.html">Track</a>
+
+    </nav>
+  </header>
+
+  <div class="page-title" style="font-weight: 700;font-size: 25px;">Review your order</div>
+
+  <div class="checkout-grid">
+    <!-- ---------------- ORDER ITEMS ---------------- -->
+    <div class="order-summary" id="cartItems"></div>
+
+    <!-- ---------------- PAYMENT SUMMARY ---------------- -->
+    <div class="payment-summary">
+      <div class="payment-summary-title">Order Summary</div>
+
+      <div class="payment-summary-row">
+        <div>Items:</div>
+        <div id="itemsTotal">₹0</div>
+      </div>
+
+      <div class="payment-summary-row">
+        <div>Shipping:</div>
+        <div id="shippingTotal">₹0</div>
+      </div>
+
+      <div class="payment-summary-row subtotal-row">
+        <div>Total before discount:</div>
+        <div id="beforeDiscount">₹0</div>
+      </div>
+
+      <div class="payment-summary-row" id="discountRow" style="display:none;">
+        <div>Discount:</div>
+        <div id="discountAmountText">-₹0</div>
+      </div>
+
+      <div class="payment-summary-row total-row" style="color: rgb(177, 39, 4);">
+        <div>Order total:</div>
+        <div id="orderTotal">₹0</div>
+      </div>
+
+      <!-- Coupon -->
+      <div class="coupon-box">
+        <input type="text" id="couponCode" placeholder="Coupon code">
+        <button onclick="applyCoupon()">Apply</button>
+      </div>
+
+      <button class="place-order-button" onclick="placeOrder()">Place your order</button>
+    </div>
+  </div>
+
+  <footer
+    style="background-color: transparent; color: #fff; padding: 40px 20px; font-family: Arial, sans-serif; font-size: 14px; border-top: 2px solid purple; box-shadow: 0 0 20px purple;">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between;">
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Get to Know Us</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">About NilaNova</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Careers</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Press Releases</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">NilaNova Science</a></li>
+        </ul>
+      </div>
+
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Connect with Us</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">Facebook</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Twitter</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Instagram</a></li>
+        </ul>
+      </div>
+
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Make Money with Us</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">Sell on NilaNova</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Become an Affiliate</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Advertise Your Products</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Fulfilment by NilaNova</a></li>
+        </ul>
+      </div>
+
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Let Us Help You</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">Your Account</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Returns Centre</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">100% Purchase Protection</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Download NilaNova App</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Help</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <hr style="border: 0; height: 1px; background: black; margin: 20px 0;">
+
+    <div style="max-width: 1200px; margin: 0 auto; text-align: center; font-size: 12px; line-height: 30px;">
+      <p style="color: black;">
+        Conditions of Use & Sale | Privacy Notice | Interest-Based Ads
+      </p>
+      <p style="color: black;">
+        © 2026 NilaNova.com, Inc. or its affiliates
+      </p>
+    </div>
+  </footer>
+
+
+  <script>
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+    if (!currentUser) {
+      alert("Please sign in first.");
+      window.location.href = "signin.html";
+    }
+    let cart = JSON.parse(localStorage.getItem("cartData_" + currentUser.email)) || [];
+    let couponApplied = false;
+    let discountAmount = 0;
+
+    cart.forEach(i => { if (!i.selectedShipping) i.selectedShipping = 0; });
+
+    function formatDate(date) {
+      return date.toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "long",
+        day: "numeric"
+      });
+    }
+
+
+    function getDates() {
+      let today = new Date();
+      let fast = new Date(today);
+      fast.setDate(today.getDate() + 1);
+
+      let standard = new Date(today);
+      standard.setDate(today.getDate() + 3);
+
+      let slow = new Date(today);
+      slow.setDate(today.getDate() + 7);
+
+      return {
+        fast: formatDate(fast),
+        standard: formatDate(standard),
+        slow: formatDate(slow)
+      };
+    }
+
+    function renderCart() {
+      let container = document.getElementById("cartItems");
+      container.innerHTML = "";
+
+      let itemsTotal = 0;
+      let shippingTotal = 0;
+
+      if (cart.length === 0) {
+        container.innerHTML = "<p>Your cart is empty.</p>";
+        return;
+      }
+
+      cart.forEach((item, index) => {
+        const dates = getDates();
+        let itemTotal = item.price * item.qty;
+        itemsTotal += itemTotal;
+        shippingTotal += Number(item.selectedShipping);
+
+        container.innerHTML += `
+      <div class="cart-item-container">
+        <div class="delivery-date">
+  Delivery date:
+  ${item.selectedShipping == 0
+            ? dates.slow
+            : item.selectedShipping == 50
+              ? dates.standard
+              : dates.fast
+          }
+</div>
+
+
+        <div class="cart-item-details-grid">
+          <img src="${item.img}" class="product-image">
+
+          <div>
+            <div class="product-name">${item.name}</div>
+            <div class="product-price">₹${item.price}</div>
+            <div class="product-quantity">
+              Quantity: 
+              <span class="quantity-label">${item.qty}</span>
+              <span class="update-quantity-link link-primary" onclick="updateQty(${index})">Update</span>
+              <span class="delete-quantity-link link-primary" onclick="removeItem(${index})">Delete</span>
+            </div>
+          </div>
+
+          <div class="delivery-options">
+            <div class="delivery-options-title">Choose delivery option:</div>
+
+            <div class="delivery-option">
+              <input type="radio" name="ship-${index}" 
+              ${item.selectedShipping == 0 ? 'checked' : ''}
+              onclick="updateShipping(${index}, 0)">
+              <div>
+                <div class="delivery-option-date">${dates.slow}</div>
+                <div class="delivery-option-price">FREE Shipping</div>
+              </div>
+            </div>
+
+            <div class="delivery-option">
+              <input type="radio" name="ship-${index}" 
+              ${item.selectedShipping == 50 ? 'checked' : ''}
+              onclick="updateShipping(${index}, 50)">
+              <div>
+                <div class="delivery-option-date">${dates.standard}</div>
+                <div class="delivery-option-price">₹50 Shipping</div>
+              </div>
+            </div>
+
+            <div class="delivery-option">
+              <input type="radio" name="ship-${index}" 
+              ${item.selectedShipping == 100 ? 'checked' : ''}
+              onclick="updateShipping(${index}, 100)">
+              <div>
+                <div class="delivery-option-date">${dates.fast}</div>
+                <div class="delivery-option-price">₹100 Shipping</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+      });
+
+      document.getElementById("itemsTotal").innerText = "₹" + itemsTotal.toFixed(2);
+      document.getElementById("shippingTotal").innerText = "₹" + shippingTotal.toFixed(2);
+
+      let beforeDiscount = itemsTotal + shippingTotal;
+      document.getElementById("beforeDiscount").innerText = "₹" + beforeDiscount.toFixed(2);
+
+      if (couponApplied) {
+        document.getElementById("discountRow").style.display = "flex";
+        document.getElementById("discountAmountText").innerText = "-₹" + discountAmount.toFixed(2);
+      }
+
+      document.getElementById("orderTotal").innerText =
+        "₹" + (beforeDiscount - discountAmount).toFixed(2);
+    }
+
+    function updateQty(index) {
+      let newQty = prompt("Enter quantity:");
+      if (newQty < 1) newQty = 1;
+      cart[index].qty = Number(newQty);
+      save();
+    }
+
+    function removeItem(index) {
+      cart.splice(index, 1);
+      save();
+    }
+
+    function updateShipping(index, cost) {
+      cart[index].selectedShipping = cost;
+      save();
+    }
+
+    function applyCoupon() {
+      const code = document.getElementById("couponCode").value.trim().toUpperCase();
+
+      let itemsTotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+
+      if (code === "SAVE10") {
+        discountAmount = itemsTotal * 0.10;
+        couponApplied = true;
+        alert("Coupon applied!");
+      } else {
+        discountAmount = 0;
+        couponApplied = false;
+        alert("Invalid coupon");
+      }
+
+      renderCart();
+    }
+
+    function save() {
+      localStorage.setItem("cartData_" + currentUser.email, JSON.stringify(cart));
+      renderCart();
+    }
+
+    function placeOrder() {
+
+      cart.forEach(item => {
+        item.discount = discountAmount;
+      });
+
+      localStorage.setItem(
+        "finalOrder_" + currentUser.email,
+        JSON.stringify(cart)
+      );
+
+      localStorage.setItem(
+        "discount_" + currentUser.email,
+        JSON.stringify(discountAmount)
+      );
+
+      // clear cart after order
+      localStorage.removeItem("cartData_" + currentUser.email);
+      localStorage.removeItem("cartCount_" + currentUser.email);
+
+      window.location.href = "payment.html";
+    }
+
+    renderCart();
+  </script>
+
+</body>
+
+</html>

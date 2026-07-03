@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="images/download.png">
+  <title>Track Your Order | NilaNova</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+
+  <style>
+* {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    html,
+    body {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden; /* Window boundary overflow shield */
+      background: #f1f3f6;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    main {
+      flex: 1;
+    }
+
+    /* ==========================================================================
+       2. FLUID HEADER ENGINE (INDEX-MATCHED STYLE)
+       ========================================================================== */
+    header {
+      width: 100%;
+      height: 70px;
+      padding: 0 5%;
+      background: rgba(255, 255, 255, 0.95);
+      border-bottom: 2px solid purple;
+      box-shadow: 0 4px 20px rgba(128, 0, 128, 0.25);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    .logo-text h3 {
+      font-size: 24px;
+      font-weight: 800;
+      background: linear-gradient(to right, purple, rgb(201, 3, 201), violet, rgb(201, 3, 201), purple);
+      background-size: 200% auto;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: animate-purple 2.5s linear infinite;
+    }
+
+    @keyframes animate-purple {
+      0% { background-position: 0%; }
+      100% { background-position: 200%; }
+    }
+
+    .header-menu {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+
+    .header-menu a {
+      color: black;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: bold;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s ease;
+    }
+
+    .header-menu a:hover {
+      color: purple;
+    }
+
+    .header-menu a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -5px;
+      width: 0;
+      height: 2px;
+      background: purple;
+      transition: width 0.3s;
+    }
+
+    .header-menu a:hover::after {
+      width: 100%;
+    }
+
+    .header-menu i {
+      font-size: 22px;
+    }
+
+    .cart-icon {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .cart-icon i {
+      font-size: 22px;
+      color: purple;
+    }
+
+    /* ==========================================================================
+       3. TRACK CONTAINER AND CONTENT HEADERS
+       ========================================================================== */
+    .page-title {
+      font-size: 25px;
+      font-weight: 700;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 25px 15px 15px 15px;
+      width: 100%;
+    }
+
+    .track-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 15px 40px 15px;
+      width: 100%;
+    }
+
+    .track-order {
+      background: #fff;
+      padding: 25px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .order-header {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 20px;
+    }
+
+    .order-img {
+      width: 90px;
+      height: 90px;
+      object-fit: contain;
+      border-radius: 6px;
+      background: #fff;
+      border: 1px solid #eee;
+    }
+
+    .order-info {
+      flex: 1;
+    }
+
+    .order-info h4 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      color: #222;
+    }
+
+    .order-info p {
+      margin: 4px 0;
+      font-size: 13px;
+      color: #555;
+    }
+
+    /* ==========================================================================
+       4. RESPONSIVE VERTICAL TIMELINE ENGINE
+       ========================================================================== */
+    .vertical-timeline {
+      position: relative;
+      margin-top: 25px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 50px 1fr;
+      column-gap: 20px;
+      position: relative;
+      padding-bottom: 30px;
+    }
+
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+
+    /* Track Connector Line */
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: 23px;
+      top: 46px;
+      width: 3px;
+      height: calc(100% - 36px);
+      background: #ddd;
+      z-index: 1;
+    }
+
+    .timeline-item:last-child::before {
+      display: none;
+    }
+
+    /* Node Status Badges */
+    .timeline-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      background: #cfcfcf;
+      color: #fff;
+      font-weight: bold;
+      border: 4px solid #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      z-index: 2;
+    }
+
+    /* Status Text Panels */
+    .timeline-content {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      border-left: 5px solid #cfcfcf;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .timeline-content:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    }
+
+    .timeline-content h4 {
+      margin: 0;
+      font-size: 16px;
+      color: #222;
+    }
+
+    .timeline-content p {
+      margin: 6px 0 0;
+      color: #666;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    /* State Rule Modifiers */
+    .timeline-item.completed .timeline-icon {
+      background: #22c55e;
+    }
+
+    .timeline-item.completed .timeline-content {
+      border-left-color: #22c55e;
+    }
+
+    .timeline-item.active .timeline-icon {
+      background: purple;
+      animation: pulse 1.5s infinite;
+    }
+
+    .timeline-item.active .timeline-content {
+      border-left-color: purple;
+    }
+
+    .timeline-item:not(.completed):not(.active) .timeline-content {
+      opacity: 0.65;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(128, 0, 128, 0.5);
+      }
+      70% {
+        transform: scale(1.06);
+        box-shadow: 0 0 0 10px rgba(128, 0, 128, 0);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(128, 0, 128, 0);
+      }
+    }
+
+    /* ==========================================================================
+       5. UNIVERSAL MEDIA QUERY VIEWPORT ADAPTERS
+       ========================================================================== */
+    @media screen and (max-width: 600px) {
+      header {
+        flex-direction: column;
+        height: auto;
+        gap: 12px;
+        padding: 15px;
+        text-align: center;
+      }
+
+      .header-menu {
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .page-title {
+        font-size: 22px;
+        text-align: center;
+        padding: 20px 15px 10px 15px;
+      }
+
+      .order-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+      }
+
+      .order-img {
+        width: 100px;
+        height: 100px;
+      }
+
+      .timeline-item {
+        grid-template-columns: 40px 1fr;
+        column-gap: 12px;
+      }
+
+      .timeline-item::before {
+        left: 18px;
+      }
+
+      .timeline-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 14px;
+      }
+    }
+
+    @media screen and (max-width: 360px) {
+      .track-container {
+        padding: 0 10px 30px 10px;
+      }
+
+      .track-order {
+        padding: 15px;
+      }
+
+      .timeline-content {
+        padding: 12px 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+
+
+  <header>
+    <div class="logo-text">
+      <h3>NilaNova</h3>
+    </div>
+
+    <nav class="header-menu">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="payment.html">Payment</a>
+      <a href="order.html">Order</a>
+
+      <div class="cart-icon">
+
+      <a href="cart.html">
+        <i class="ri-shopping-cart-2-line"></i>
+      </a>
+      </div>
+    </nav>
+  </header>
+
+  <div class="page-title" style="font-weight: 700;font-size: 25px;padding-left: 570px;">Track Orders</div>
+  <div class="track-container" id="trackOrders"></div>
+
+  <footer
+    style="background-color: transparent; color: #fff; padding: 40px 20px; font-family: Arial, sans-serif; font-size: 14px; border-top: 2px solid purple; box-shadow: 0 0 20px purple;">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between;">
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Get to Know Us</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">About NilaNova</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Careers</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Press Releases</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">NilaNova Science</a></li>
+        </ul>
+      </div>
+
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Connect with Us</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">Facebook</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Twitter</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Instagram</a></li>
+        </ul>
+      </div>
+
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Make Money with Us</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">Sell on NilaNova</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Become an Affiliate</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Advertise Your Products</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Fulfilment by NilaNova</a></li>
+        </ul>
+      </div>
+
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Let Us Help You</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">Your Account</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Returns Centre</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">100% Purchase Protection</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Download NilaNova App</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Help</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <hr style="border: 0; height: 1px; background: black; margin: 20px 0;">
+
+    <div style="max-width: 1200px; margin: 0 auto; text-align: center; font-size: 12px; line-height: 30px;">
+      <p style="color: black;">
+        Conditions of Use & Sale | Privacy Notice | Interest-Based Ads
+      </p>
+      <p style="color: black;">
+        © 2026 NilaNova.com, Inc. or its affiliates
+      </p>
+    </div>
+  </footer>
+  <script>
+
+    requireLogin();
+
+  </script>
+  <script>
+
+    // Load saved completed orders
+    // Check Login
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+    if (!currentUser) {
+      alert("Please sign in first.");
+      window.location.href = "signin.html";
+    }
+
+    // User-specific order key
+    const orderKey = "completedOrders_" + currentUser.email;
+
+    // Load this user's completed orders
+    let completedOrders =
+      JSON.parse(localStorage.getItem(orderKey)) || [];
+    // Delivery days based on shipping cost
+    function deliveryDaysFromShipping(cost) {
+      const c = Number(cost);
+      return c === 100 ? 1 : c === 50 ? 3 : 7;
+    }
+
+    // Format future date
+    function formatDateFromDays(days) {
+      const d = new Date();
+      d.setDate(d.getDate() + days);
+      return d.toLocaleDateString('en-US', {
+        weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+      });
+    }
+
+    // Auto Status Labels
+    const statusLabels = ["Ordered", "Shipped", "Out for Delivery", "Delivered"];
+
+    // MAIN FUNCTION
+    function renderTrackOrders() {
+      const container = document.getElementById("trackOrders");
+      container.innerHTML = "";
+
+      if (!completedOrders.length) {
+        container.innerHTML = '<p style="text-align:center; padding:20px; color:#666;">No orders to track.</p>';
+        return;
+      }
+
+      completedOrders.forEach(order => {
+
+        // ---- AUTO STATUS CALCULATION ----
+
+        let orderDate = new Date(order.orderDate);
+        let now = new Date();
+
+        let daysPassed =
+          Math.floor((now - orderDate) / (1000 * 60 * 60 * 24));
+
+        let deliveryDays = deliveryDaysFromShipping(order.selectedShipping);
+
+        let autoStatus = 0;
+
+        if (daysPassed >= 0) autoStatus = 0; // Ordered
+        if (daysPassed >= 1) autoStatus = 1; // Shipped
+        if (daysPassed >= 2) autoStatus = 2; // Out for Delivery
+        if (daysPassed >= deliveryDays) autoStatus = 3; // Delivered
+
+        // Save status back to order (keeps updated)
+        order.status = autoStatus;
+        localStorage.setItem(
+          orderKey,
+          JSON.stringify(completedOrders)
+        );
+        const deliveryDate = formatDateFromDays(deliveryDays);
+
+        // Render each order block
+        container.insertAdjacentHTML("beforeend", `
+            <div class="track-order">
+                <div class="order-header">
+                    <img src="${order.img}" class="order-img">
+
+                    <div class="order-info">
+                        <h4>${order.name}</h4>
+                        <p>Order ID: <b>${order.id}</b></p>
+                        <p>Qty: ${order.qty} | Payment: ${order.paymentMethod}</p>
+
+                        <p>Order Date: <strong>${order.orderDate}</strong></p>
+                        <p>Expected Delivery: <b>${deliveryDate}</b></p>
+                    </div>
+                </div>
+
+                <div class="vertical-timeline">
+
+    ${statusLabels.map((label, idx) => {
+
+          const icons = [
+            "📦",
+            "🚚",
+            "🛵",
+            "🏠"
+          ];
+
+          const descriptions = [
+            "Your order has been confirmed.",
+            "Package left our warehouse.",
+            "Your package is on the way.",
+            "Package delivered successfully."
+          ];
+
+          return `
+        <div class="timeline-item ${idx <= autoStatus ? 'completed' : ''} ${idx === autoStatus ? 'active' : ''}">
+
+            <div class="timeline-icon">
+                ${idx < autoStatus ? "✔" : icons[idx]}
+            </div>
+
+            <div class="timeline-content">
+                <h4>${label}</h4>
+                <p>${descriptions[idx]}</p>
+            </div>
+
+        </div>
+        `;
+        }).join("")}
+
+</div>
+            </div>
+        `);
+      });
+    }
+
+    renderTrackOrders();
+
+  </script>
+</body>
+
+</html>

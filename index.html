@@ -1,0 +1,1987 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/download.png">
+    <title>NilaNova - India's Smart Online Shopping Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+    <script src="js/address.js"></script>
+
+    <style>
+        /* ============================
+   GLOBAL SETTINGS
+============================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition-duration: 0.15s !important;
+            /* fast transitions */
+        }
+
+        body {
+            background: #ffffffc0;
+            overflow-x: hidden;
+            /* Hard safety boundary to prevent any side-scrolling */
+        }
+
+        /* ============================
+   HEADER WRAPPER
+============================ */
+        header {
+            width: 100%;
+            background: #ffffffc0;
+            border-bottom: 2px solid purple;
+            box-shadow: 0 0 20px purple;
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        /* ============================
+   LOGO TEXT
+============================ */
+        /* =========================
+   PURPLE GRADIENT LOGO
+========================= */
+        .logo-text h3 {
+            font-size: 20px;
+            font-weight: 800;
+
+
+            /* Purple gradient shades */
+            background: linear-gradient(to right,
+                    purple, rgb(201, 3, 201), violet, rgb(201, 3, 201), purple);
+            background-size: 200% auto;
+
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+
+            animation: animate-purple 2.5s linear infinite;
+        }
+
+        /* Gradient animation */
+        @keyframes animate-purple {
+            0% {
+                background-position: 0%;
+            }
+
+            100% {
+                background-position: 200%;
+            }
+        }
+
+        /* Optional: fade-in on page load */
+        .logo-text h3 {
+            opacity: 0;
+            animation: animate-purple 2.5s linear infinite, fadeIn 1s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+
+        /* ============================
+   LOCATION BOX
+============================ */
+        .location-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: black;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .location-box i {
+            color: purple;
+            font-size: 20px;
+            transition: .15s;
+        }
+
+        .location-box:hover i {
+            transform: translateY(-2px);
+        }
+
+        /* ============================
+   SEARCH BAR
+============================ */
+        .search-bar {
+            width: 50%;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 40px 10px 15px;
+            background: transparent;
+            border: 2px solid purple;
+            color: black;
+            font-size: 15px;
+            border-radius: 40px;
+            outline: none;
+
+        }
+
+        .search-bar input::placeholder {
+            color: rgba(0, 0, 0, 0.59);
+        }
+
+        .search-bar i {
+            position: absolute;
+            right: 12px;
+            font-size: 20px;
+            color: purple;
+            cursor: pointer;
+        }
+
+        /* ============================
+   MENU ITEMS
+============================ */
+        .header-menu {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .header-menu a {
+            color: black;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .header-menu a:hover {
+            color: purple;
+        }
+
+        .header-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: purple;
+            transition: .15s;
+        }
+
+        .header-menu a:hover::after {
+            width: 100%;
+        }
+
+        .account-menu {
+
+            position: relative;
+
+        }
+
+        .account-trigger {
+
+            cursor: pointer;
+
+            line-height: 18px;
+
+        }
+
+        .account-trigger .hello {
+
+            font-size: 13px;
+
+        }
+
+        .account-trigger .title {
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+        }
+
+        .dropdown-menu {
+
+            position: absolute;
+
+            top: 45px;
+
+            right: 0;
+
+            width: 230px;
+
+            background: #fff;
+
+            border-radius: 8px;
+
+            box-shadow: 0 10px 25px rgba(0, 0, 0, .15);
+
+            display: none;
+
+
+
+            z-index: 9999;
+
+        }
+
+        .dropdown-menu a {
+
+            display: block;
+
+            padding: 14px 18px;
+
+            text-decoration: none;
+
+            color: #333;
+
+        }
+
+
+        .dropdown-menu.show {
+
+            opacity: 1;
+
+            visibility: visible;
+
+            transform: translateY(0);
+
+        }
+
+        .dropdown-menu a:hover {
+
+            background: #f5f5f5;
+
+        }
+
+        .account-menu:hover .dropdown-menu {
+
+            display: block;
+
+        }
+
+        /* ============================
+   CART ICON
+============================ */
+        .cart-icon {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .cart-icon i {
+            font-size: 22px;
+            color: purple;
+        }
+
+        .cart-icon span {
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .slider {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-height: 620px;
+        }
+
+        .slides {
+            display: flex;
+            transition: transform 0.6s ease;
+        }
+
+        .slide {
+            min-width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        .slide img {
+            max-height: 320px;
+            border-radius: 8px;
+        }
+
+        /* Arrows */
+        .slider .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            color: white;
+            border: none;
+            padding: 16px;
+            cursor: pointer;
+            border-radius: 50%;
+            font-size: 18px;
+            z-index: 100;
+            transition: background 0.3s;
+            width: 2px;
+
+        }
+
+        .slider .arrow.left {
+            left: 5px;
+            padding-top: 2px;
+            padding-left: 5px;
+        }
+
+        .slider .arrow.right {
+            right: 5px;
+            padding-top: 2px;
+            padding-right: 10px;
+        }
+
+        /* Targeted override for slider action elements */
+        .slide button {
+            width: auto;
+            /* Removes strict fixed-width choking */
+            min-width: 130px;
+            /* Guarantees a clean minimum visual footprint */
+            height: auto;
+            /* Prevents vertical clipping */
+            min-height: 40px;
+            /* Keeps a great touch target size for mobile fingers */
+            padding: 8px 20px;
+            /* Gives text clean breathing room on the sides */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            /* Prevents bad line breaking inside the button text */
+            margin-top: 15px;
+            /* Ensures separation from the paragraph description */
+        }
+
+        /* Dots */
+        .dots {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 15px;
+            display: flex;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .dot.active {
+            background: #febd69;
+            /* Accent color */
+        }
+
+        /* ===== Categories Section ===== */
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 18px;
+            padding: 30px 20px;
+        }
+
+        .cat {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cat:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .cat .icon {
+            font-size: 36px;
+            padding: 12px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, purple, rgb(156, 13, 156));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: black;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .cat strong {
+            display: block;
+            font-size: 16px;
+            color: black;
+        }
+
+        .cat .muted {
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* ===== Deals of the Day Section ===== */
+        .deals {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            padding: 25px 20px;
+            background: linear-gradient(135deg, violet, rgb(156, 13, 156));
+            color: #fff;
+            border-radius: 12px;
+            margin: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            transition: transform 0.3s ease;
+        }
+
+        .deals:hover {
+            transform: translateY(-3px);
+        }
+
+        .deals h3 {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        .deals p {
+            font-size: 14px;
+            opacity: 0.85;
+        }
+
+        /* Countdown Timer Styling */
+        .timer {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            text-align: center;
+            min-width: 120px;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s ease;
+        }
+
+        .timer:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Responsive for Mobile */
+        @media screen and (max-width: 768px) {
+            .deals {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .timer {
+                margin-top: 10px;
+            }
+
+            .categories {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 15px;
+            }
+
+            .cat {
+                padding: 15px;
+            }
+
+            .cat .icon {
+                font-size: 28px;
+                padding: 10px;
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+            50% {
+                transform: scale(1.05);
+                background: rgba(255, 255, 255, 0.35);
+            }
+        }
+
+        :root {
+            --accent: rgb(156, 13, 156);
+        }
+
+        /* ===== Product Rows ===== */
+        .product-row {
+            padding: 20px;
+            margin-bottom: 25px;
+            background: #fff;
+            border-radius: 12px;
+        }
+
+        .product-row h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: black;
+            font-weight: 600;
+        }
+
+        .row-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Products container */
+        .products {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            padding-bottom: 10px;
+            scroll-snap-type: x mandatory;
+            flex: 1;
+        }
+
+        .products::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .products::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        /* Individual Product Card */
+        .product {
+            min-width: 180px;
+            background: #fff;
+            padding: 14px;
+            border-radius: 12px;
+
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            scroll-snap-align: start;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .product img {
+            width: 100%;
+            height: 140px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .product img:hover {
+            transform: scale(1.05);
+        }
+
+        .product div {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.3;
+        }
+
+        /* Scroller buttons */
+        .scroller-btn {
+            background: linear-gradient(135deg, violet, rgb(156, 13, 156));
+            color: #fff;
+            border: none;
+            padding: 5px 12px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: transform 0.2s ease, background 0.3s ease;
+            width: 2px;
+        }
+
+        .scroller-btn:hover {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, rgb(156, 13, 156), violet);
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 768px) {
+            .product {
+                min-width: 140px;
+                padding: 12px;
+            }
+
+            .product img {
+                height: 120px;
+            }
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .card {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+
+            color: black;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .card ul {
+            list-style: none;
+        }
+
+        .card ul li {
+            margin: 5px 0;
+        }
+
+
+
+        .top-brands {
+            padding: 20px;
+        }
+
+        .top-brands h3 {
+            margin-bottom: 16px;
+            font-size: 20px;
+            font-weight: 700;
+            color: black;
+        }
+
+        .brands {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 16px;
+            align-items: center;
+        }
+
+        .brand-logo {
+            background: #fff;
+            padding: 12px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            height: 80px;
+            /* fixed height for all cards */
+        }
+
+        .brand-logo img {
+            height: 50px;
+            /* all logos have same height */
+            width: auto;
+            /* maintain aspect ratio */
+            object-fit: contain;
+        }
+
+        .brand-logo:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Responsive for small screens */
+        @media screen and (max-width: 600px) {
+            .brand-logo {
+                height: 60px;
+            }
+
+            .brand-logo img {
+                height: 40px;
+            }
+
+
+
+            .slide button {
+                width: auto !important;
+                /* Overrides any rigid framework assignments */
+                min-width: 150px !important;
+                /* Slightly larger target for crisp mobile execution */
+                padding: 10px 24px !important;
+                /* Deeper hit target space */
+                font-size: 14px !important;
+                /* Easy readability on smart screens */
+                margin: 15px auto 0 auto !important;
+                /* Perfect auto-alignment when stacked */
+            }
+        }
+
+        .testimonials {
+            padding: 40px 20px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .testimonials h3 {
+            font-size: 24px;
+            margin-bottom: 30px;
+            font-weight: 700;
+            color: black;
+        }
+
+        .testimonial-cards {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .testimonial-card {
+            background: #fff;
+
+            padding: 20px 18px;
+            border-radius: 12px;
+            width: 280px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+        }
+
+        .testimonial-card .stars {
+            font-size: 18px;
+            color: #FFD700;
+            /* gold stars */
+            margin-bottom: 12px;
+        }
+
+        .testimonial-card p {
+            font-size: 14px;
+            color: black;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .testimonial-card h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: black;
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 768px) {
+            .testimonial-cards {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+
+
+
+
+
+
+        .products_list {
+            position: relative;
+            background-color: #fff;
+
+            height: 300px;
+            width: 200px;
+            border-radius: 10px;
+            display: inline-block;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            margin: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+
+            margin-right: 30px;
+        }
+
+        .products_list:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        button {
+            background-color: rgba(255, 209, 4, 0.978);
+            border-radius: 20px;
+            height: 30px;
+            width: 100px;
+            border: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        button:hover {
+            background-color: rgba(255, 175, 4, 0.978);
+            transform: translateY(-5px) scale(1.02);
+        }
+
+        .rating-container {
+            display: flex;
+        }
+
+        .ratings {
+            height: 10px;
+            margin-right: 6px;
+            align-items: center;
+            padding-left: 60px;
+        }
+
+        .rating-count {
+            font-size: 10px;
+            cursor: pointer;
+            color: rgb(255, 174, 0);
+            font-weight: bold;
+        }
+
+        .prices {
+            font-size: 15px;
+            color: green;
+            font-weight: bold;
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            color: darkgray;
+        }
+
+        .offer {
+            background-color: red;
+            position: absolute;
+            color: azure;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 5px 5px;
+        }
+
+        .wishlist-icon {
+            position: absolute;
+            font-size: 18px;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.3s;
+            right: 10px;
+            top: 10px;
+        }
+
+        .wishlist-icon:hover {
+            color: red;
+        }
+
+        /* ==========================================================================
+   100% PERFECT RESPONSIVE ENGINE (ZERO DISRUPTIONS OVERRIDE)
+========================================================================== */
+
+        /* ==========================================================================
+           1. TABLET OPTIMIZATION (1024px and down)
+           ========================================================================== */
+        @media screen and (max-width: 1024px) {
+            header {
+                padding: 12px 20px;
+            }
+
+            .search-bar {
+                width: 45%;
+            }
+
+            .header-menu {
+                gap: 15px;
+            }
+
+            /* Fixed Slider Elements - Subtly scale fonts to match viewport scale */
+            .slider {
+                min-height: 380px;
+            }
+
+            .slide h2 {
+                font-size: 32px !important;
+            }
+
+            .slide p {
+                font-size: 15px !important;
+            }
+
+            .grid-container {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                padding: 15px;
+            }
+        }
+
+        /* ==========================================================================
+           2. MOBILE LAYOUT SHIFT (850px and down)
+           ========================================================================== */
+        @media screen and (max-width: 850px) {
+            header {
+                flex-wrap: wrap;
+                padding: 12px 15px;
+                gap: 10px 15px;
+            }
+
+            .logo-text {
+                order: 1;
+            }
+
+            .location-box {
+                order: 2;
+                margin-right: auto;
+                /* Pushes menu sets to the edge cleanly */
+            }
+
+            .header-menu {
+                order: 3;
+                gap: 15px;
+            }
+
+            .search-bar {
+                order: 4;
+                width: 100%;
+                /* Drops search to its own fluid row */
+                margin-top: 4px;
+            }
+
+            /* Fixed Slider Elements - Maintaining desktop horizontal layout, but sizing down gracefully */
+            .slider {
+                height: 320px;
+                min-height: auto;
+            }
+
+            .slide {
+                padding: 20px 40px;
+            }
+
+            .slide h2 {
+                font-size: 26px !important;
+                margin-bottom: 8px !important;
+            }
+
+            .slide p {
+                font-size: 14px !important;
+            }
+
+            .slide img {
+                max-height: 220px;
+                max-width: 45%;
+            }
+        }
+
+        /* ==========================================================================
+           3. SMARTPHONES & SMALLER DISPLAYS (600px and down)
+           ========================================================================== */
+        @media screen and (max-width: 600px) {
+            header {
+                padding: 10px;
+                gap: 8px;
+            }
+
+            .logo-text h3 {
+                font-size: 17px;
+            }
+
+            /* Location Box Fixes */
+            .location-box {
+                gap: 4px;
+            }
+
+            .location-box i {
+                font-size: 16px;
+            }
+
+            .location-box span {
+                font-size: 11px;
+                max-width: 85px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                /* Smoothly truncates long addresses safely */
+            }
+
+            /* Menu and Account Text Fixes */
+            .header-menu {
+                gap: 12px;
+            }
+
+            .header-menu a {
+                font-size: 13px;
+            }
+
+            .account-trigger .hello {
+                font-size: 10px;
+                display: block;
+            }
+
+            .account-trigger .title {
+                font-size: 13px;
+            }
+
+            /* Absolute Positioning Dropdown Collision Fix */
+            .dropdown-menu {
+                right: -15px;
+                width: 190px;
+                top: 42px;
+            }
+
+            .dropdown-menu a {
+                padding: 10px 14px;
+                font-size: 13px;
+            }
+
+            /* Slider Re-Engineering - REMOVED rigid max-height restrictions to prevent text overlapping */
+            .slider {
+                height: auto;
+                min-height: 400px;
+                /* Provides a robust box frame while remaining fluid */
+            }
+
+            .slide {
+                flex-direction: column-reverse;
+                /* Stack texts beneath image graphics elegantly */
+                justify-content: center;
+                gap: 16px;
+                padding: 30px 25px 45px 25px;
+                /* Added padding space at bottom for indicator navigation dots */
+                text-align: center;
+            }
+
+            .slide>div {
+                width: 100%;
+                flex: none;
+            }
+
+            .slide h2 {
+                font-size: 22px !important;
+                line-height: 1.3 !important;
+                margin: 10px 0 6px 0 !important;
+            }
+
+            .slide p {
+                font-size: 13px !important;
+                line-height: 1.4 !important;
+                margin-bottom: 12px !important;
+            }
+
+            .slide img {
+                max-height: 160px;
+                /* Keeps images large enough to recognize but small enough to fit typography */
+                width: auto;
+                max-width: 80%;
+                object-fit: contain;
+                margin: 0 auto;
+            }
+
+            .slide button {
+                width: 140px !important;
+                height: 38px !important;
+                font-size: 13px !important;
+            }
+
+            .slider .arrow {
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
+            }
+
+            .slider .arrow.left {
+                left: 8px;
+            }
+
+            .slider .arrow.right {
+                right: 8px;
+            }
+
+            .dots {
+                bottom: 10px;
+            }
+
+            /* Product Rows Mobile Display Setup */
+            .products {
+                overflow-x: auto !important;
+                /* Forces native swipe capability on mobile viewports */
+            }
+
+            .products_list {
+                display: block;
+                margin: 20px auto !important;
+                /* Centers individual product listings */
+                float: none;
+            }
+
+            .ratings {
+                padding-left: 20px;
+            }
+
+            /* Footer/Grid Component Auto Collapse */
+            .grid-container {
+                grid-template-columns: 1fr !important;
+                /* Rigid vertical stack architecture */
+                gap: 15px;
+                padding: 10px;
+            }
+
+            .card {
+                text-align: center;
+                padding: 15px;
+            }
+        }
+
+        /* ==========================================================================
+           4. MICRO-SCREEN SUPPORT (360px and down)
+           ========================================================================== */
+        @media screen and (max-width: 360px) {
+            .location-box span {
+                display: inline-block;
+                max-width: 175px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                /* Shrinks text cleanly to "Deliv..." instead of breaking */
+            }
+
+            .logo-text h3 {
+                font-size: 15px;
+            }
+
+            .header-menu a,
+            .account-trigger .title {
+                font-size: 12px;
+            }
+
+            .dropdown-menu {
+                right: -35px;
+                /* Pulls dropdown window inwards to fit viewport margins */
+            }
+
+            /* Micro-slider adjustment to prevent element crowding */
+            .slide h2 {
+                font-size: 19px !important;
+            }
+
+            .slide img {
+                max-height: 130px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+
+        <div class="logo-text">
+            <h3>NilaNova</h3>
+        </div>
+
+        <a href="address.html" style="text-decoration: none;">
+            <div class="location-box">
+                <i class="ri-map-pin-2-fill"></i>
+
+                <span id="deliveryLocation">
+                    Loading...
+                </span>
+            </div>
+        </a>
+
+        <div class="search-bar">
+            <input type="text" placeholder="Search NilaNova products...">
+            <i class="ri-search-line"></i>
+        </div>
+
+        <div class="header-menu">
+
+            <div id="accountArea"></div>
+
+            <a href="shop.html">Shop</a>
+
+            <a href="order.html">Orders</a>
+
+            <a href="track.html">Track</a>
+
+            <div class="cart-icon">
+                <a href="cart.html">
+                    <i class="ri-shopping-cart-2-line"></i>
+                </a>
+            </div>
+
+        </div>
+
+    </header>
+
+    <section class="slider" id="mainSlider">
+        <div class="slides" id="slides">
+
+            <!-- Slide 1 -->
+            <div class="slide" style="background:linear-gradient(90deg,#ff9a9e,#fecfef);">
+                <div style="padding:20px;">
+
+
+                    <h2 style="font-size:42px;color:#222;margin:20px 0 10px;font-weight:800;">🎉 Today's Big Deal</h2>
+
+                    <p style="font-size:26px;color:#d50000;font-weight:bold;">Flat 70% OFF</p>
+
+                    <p style="font-size:18px;color:#444;line-height:30px;">
+                        Grab your favourite gadgets before the offer ends.
+                    </p>
+
+                    <p style="font-size:17px;color:#000;">⭐ 4.9 Rating | 🚚 Free Delivery | 🔄 Easy Returns</p>
+
+                    <a href="shop.html" style="text-decoration: none;"><button style="
+display:inline-flex;
+align-items:center;
+justify-content:center;
+margin-top:25px;
+padding:14px 38px;
+background:linear-gradient(135deg,#ff6a00,#ff9800);
+color:#fff;
+font-size:18px;
+font-weight:700;
+border:none;
+border-radius:50px;
+cursor:pointer;
+box-shadow:0 8px 20px rgba(255,106,0,.4);
+transition:all .3s ease;
+min-width:180px;
+height:55px;
+letter-spacing:0.5px;
+">
+                            Shop →
+                        </button></a>
+                </div>
+
+                <img src="images/Noise_home.png" alt="Deal"
+                    style="width:420px;filter:drop-shadow(0 10px 25px rgba(0,0,0,.35));">
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="slide" style="background:linear-gradient(90deg,#84fab0,#8fd3f4);">
+                <div style="padding:20px;">
+
+
+
+                    <h2 style="font-size:42px;color:#003366;margin:20px 0 10px;font-weight:800;">
+                        Vivo V50 Launch
+                    </h2>
+
+                    <p style="font-size:25px;color:#0d47a1;font-weight:bold;">
+                        Starting at ₹12,999
+                    </p>
+
+                    <p style="font-size:18px;color:#333;line-height:30px;">
+                        Pre-order today and receive exclusive launch gifts.
+                    </p>
+
+                    <p style="font-size:17px;color:#000;">
+                        🎁 Free Earbuds | 💳 No Cost EMI | 🚀 Fast Delivery
+                    </p>
+
+                    <a href="shop.html" style="text-decoration: none;"><button style="
+display:inline-flex;
+align-items:center;
+justify-content:center;
+margin-top:25px;
+padding:14px 38px;
+background:linear-gradient(135deg,#ff6a00,#ff9800);
+color:#fff;
+font-size:18px;
+font-weight:700;
+border:none;
+border-radius:50px;
+cursor:pointer;
+box-shadow:0 8px 20px rgba(255,106,0,.4);
+transition:all .3s ease;
+min-width:180px;
+height:55px;
+letter-spacing:0.5px;
+">
+
+                            Explore →
+                        </button></a>
+
+                </div>
+
+                <img src="images/Vivo_home.png" alt="Mobile"
+                    style="width:420px;filter:drop-shadow(0 10px 25px rgba(0,0,0,.35));">
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="slide" style="background:linear-gradient(90deg,#f6d365,#fda085);">
+                <div style="padding:20px;">
+
+
+
+                    <h2 style="font-size:42px;color:#4e342e;margin:20px 0 10px;font-weight:800;">
+                        Fashion Festival
+                    </h2>
+
+                    <p style="font-size:26px;color:#bf360c;font-weight:bold;">
+                        Up to 50% OFF
+                    </p>
+
+                    <p style="font-size:18px;color:#4e342e;line-height:30px;">
+                        Upgrade your style with premium fashion collections.
+                    </p>
+
+                    <p style="font-size:17px;color:#000;">
+                        👕 Men's | 👗 Women's | 👟 Footwear | 👜 Bags
+                    </p>
+
+                    <a href="shop.html" style="text-decoration: none;"><button style="
+display:inline-flex;
+align-items:center;
+justify-content:center;
+margin-top:25px;
+padding:14px 38px;
+background:linear-gradient(135deg,#ff6a00,#ff9800);
+color:#fff;
+font-size:18px;
+font-weight:700;
+border:none;
+border-radius:50px;
+cursor:pointer;
+box-shadow:0 8px 20px rgba(255,106,0,.4);
+transition:all .3s ease;
+min-width:180px;
+height:55px;
+letter-spacing:0.5px;
+">
+                            Shop →
+                        </button></a>
+
+                </div>
+
+                <img src="images/Ptron_home.png" alt="Fashion"
+                    style="width:420px;filter:drop-shadow(0 10px 25px rgba(0,0,0,.35));">
+            </div>
+
+
+        </div>
+
+        <!-- Navigation Arrows -->
+        <button class="arrow left" id="prevSlide">❮</button>
+        <button class="arrow right" id="nextSlide">❯</button>
+
+        <!-- Dots -->
+        <div class="dots" id="dots"></div>
+    </section>
+
+
+
+
+
+    <section class="grid-container">
+        <div class="card">
+            <h3>Appliances for your home | Up to 55% off</h3>
+            <ul>
+                <li>Air Conditioners</li>
+                <li>Refrigerators</li>
+                <li>Microwaves</li>
+                <li>Washing Machines</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3>400+ New Launches | Prime Day</h3>
+            <ul>
+                <li>Latest Tech</li>
+                <li>Gadgets</li>
+                <li>Mobile Deals</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3>Revamp your home in style</h3>
+            <ul>
+                <li>Cushion Covers</li>
+                <li>Figurines & Vases</li>
+                <li>Lighting</li>
+                <li>Home Storage</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3>PlayStation 5 Slim & Accessories</h3>
+            <ul>
+                <li>Digital Edition</li>
+                <li>Disc Edition</li>
+                <li>Wireless Controller</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3>Under ₹499 | Home Improvement</h3>
+            <ul>
+                <li>Cleaning Tools</li>
+                <li>Bathroom Accessories</li>
+                <li>Wallpapers</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3>Headphones from ₹149</h3>
+            <ul>
+                <li>boAt</li>
+                <li>Boult</li>
+                <li>Noise</li>
+                <li>Zebronics</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3>Automotive Essentials | Up to 60% Off</h3>
+            <ul>
+                <li>Cleaning</li>
+                <li>Tyre Care</li>
+                <li>Helmets</li>
+                <li>Vacuum Cleaner</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3>Based on your browsing</h3>
+            <ul>
+                <li>Folding Beds</li>
+                <li>Mattresses</li>
+                <li>Sleeping Cots</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ===== Horizontal product scrollers ===== -->
+    <!-- ===== Horizontal product scrollers ===== -->
+    <section class="product-row">
+        <h3>Mobiles under ₹10,000</h3>
+        <div class="row-wrapper">
+            <div class="products" id="mobiles">
+                <div class="product"><img src="images/Samsung.webp" alt="p1">
+                    <div>SamSung<br>₹9,499</div>
+                </div>
+                <div class="product"><img src="images/Vivo.webp" alt="p2">
+                    <div>Vivo<br>₹8,999</div>
+                </div>
+                <div class="product"><img src="images/Appletab.webp" alt="p3">
+                    <div>Apple<br>₹7,499</div>
+                </div>
+                <div class="product"><img src="images/Lenovo.webp" alt="p4">
+                    <div>Lenovo<br>₹6,999</div>
+                </div>
+                <div class="product"><img src="images/Samsung.webp" alt="p1">
+                    <div>SamSung<br>₹9,499</div>
+                </div>
+                <div class="product"><img src="images/Vivo.webp" alt="p2">
+                    <div>Vivo<br>₹8,999</div>
+                </div>
+                <div class="product"><img src="images/Appletab.webp" alt="p3">
+                    <div>Apple<br>₹7,499</div>
+                </div>
+                <div class="product"><img src="images/Lenovo.webp" alt="p4">
+                    <div>Lenovo<br>₹6,999</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="product-row">
+        <h3>Deals of the Day</h3>
+        <div class="row-wrapper">
+            <div class="products" id="deals">
+                <div class="product"><img src="images/Ptron.webp">
+                    <div>Ptron<br>₹549</div>
+                </div>
+                <div class="product"><img src="images/Noise.webp">
+                    <div>Noise Bolt<br>₹1,599</div>
+                </div>
+                <div class="product"><img src="images/LG.webp">
+                    <div>TV LG<br>₹44,549</div>
+                </div>
+                <div class="product"><img src="images/Ambrane.webp">
+                    <div>Ambrane<br>₹499</div>
+                </div>
+                <div class="product"><img src="images/safari_bag.webp">
+                    <div>Safari Bag<br>₹699</div>
+                </div>
+                <div class="product"><img src="images/Portronics.webp">
+                    <div>Portronics<br>₹199</div>
+                </div>
+                <div class="product"><img src="images/Acer.webp">
+                    <div>Acer<br>₹45,849</div>
+                </div>
+                <div class="product"><img src="images/shoe.webp">
+                    <div>Snekerz<br>₹499</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Deals of the Day + Countdown (Feature 4) ===== -->
+    <section class="deals">
+        <div>
+            <h3>Deals of the Day</h3>
+            <p>Best prices — limited time</p>
+        </div>
+        <div class="center">
+            <a href="deal.html" style="text-decoration: none;color: white;">
+                <div class="timer" id="countdown">Ends in: --:--:--</div>
+            </a>
+        </div>
+    </section>
+
+    <section class="product-row">
+        <h3>Recommended for You</h3>
+        <div class="row-wrapper">
+            <div class="products" id="recommended">
+                <div class="product"><img src="images/Air.webp">
+                    <div>Folding Bed<br>₹3,499</div>
+                </div>
+                <div class="product"><img src="images/Doll.webp">
+                    <div>Mattress<br>₹2,999</div>
+                </div>
+                <div class="product"><img src="images/secret_book.webp">
+                    <div>Cot<br>₹1,499</div>
+                </div>
+                <div class="product"><img src="images/samsung_tv.webp">
+                    <div>Folding Bed<br>₹3,499</div>
+                </div>
+                <div class="product"><img src="images/Pink_bag.webp">
+                    <div>Mattress<br>₹2,999</div>
+                </div>
+                <div class="product"><img src="images/Fastrack.webp">
+                    <div>Cot<br>₹1,499</div>
+                </div>
+                <div class="product"><img src="images/Boat.webp">
+                    <div>Folding Bed<br>₹3,499</div>
+                </div>
+                <div class="product"><img src="images/Lenovo.webp">
+                    <div>Mattress<br>₹2,999</div>
+                </div>
+                <div class="product"><img src="images/rc.webp">
+                    <div>Cot<br>₹1,499</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Top brands (feature 7) ===== -->
+    <section class="top-brands">
+        <h3>Top Brands</h3>
+        <div class="brands">
+            <div class="brand-logo">
+                <img src="https://th.bing.com/th/id/OIP.sv810h3uMqK1cnLHIxRwFAHaCc?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"
+                    alt="Samsung Logo">
+            </div>
+            <div class="brand-logo">
+                <img src="https://static.vecteezy.com/system/resources/previews/019/136/325/non_2x/apple-logo-apple-icon-free-free-vector.jpg"
+                    alt="Apple Logo">
+            </div>
+            <div class="brand-logo">
+                <img src="https://tse1.mm.bing.net/th/id/OIP.qo0wR0FBwkNPxD8Vk6UxPwAAAA?cb=thfc1falcon2&rs=1&pid=ImgDetMain&o=7&rm=3"
+                    alt="Sony Logo">
+            </div>
+
+            <div class="brand-logo">
+                <img src="https://th.bing.com/th/id/OIP.pMfCH1YoNx8YqN0MHijkpwHaHa?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"
+                    alt="boAt Logo">
+            </div>
+            <div class="brand-logo">
+                <img src="https://static.vecteezy.com/system/resources/previews/022/100/964/large_2x/lg-logo-transparent-free-png.png"
+                    alt="LG Logo">
+            </div>
+            <div class="brand-logo">
+                <img src="https://static.vecteezy.com/system/resources/previews/022/424/562/non_2x/hp-logo-editorial-free-vector.jpg"
+                    alt="HP Logo">
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+    <center>
+        <div class="products_list">
+            <div class="offer">11.64% OFF</div>
+            <i class="fas fa-heart wishlist-icon"></i>
+            <img src="images/Samsung.webp" alt="" height="150px" width="150px" style="padding: 20px;">
+            <center>
+                <h5>GAlaxy MO5</h5>
+                <p class="prices">₹6,627 <span class="old-price">₹7,500</span></p>
+                <div class="rating-container"><img src="images/rating_4.5.png" alt="" class="ratings">
+                    <div class="rating-count"> (2.1K)</div>
+                </div><br><a href="shop.html" style="text-decoration: none;"><button>View Details</button></a>
+            </center>
+        </div>
+        <div class="products_list">
+            <div class="offer">20.04% OFF</div>
+            <i class="fas fa-heart wishlist-icon"></i>
+            <img src="images/Noise.webp" alt="" height="150px" width="150px" style="padding: 20px;">
+            <center>
+                <h5>Noise ColorFit Pro</h5>
+                <p class="prices">₹1,999 <span class="old-price">₹2,500</span></p>
+                <div class="rating-container"><img src="images/rating_3.5.png" alt="" class="ratings">
+                    <div class="rating-count">(209)</div>
+                </div><br><a href="shop.html" style="text-decoration: none;"><button>View Details</button></a>
+            </center>
+        </div>
+        <div class="products_list">
+            <div class="offer">46.61% OFF</div>
+            <i class="fas fa-heart wishlist-icon"></i>
+            <img src="images/Ptron.webp" alt="" height="150px" width="150px" style="padding: 20px;">
+            <center>
+                <h5>Anker Space One</h5>
+                <p class="prices">₹6,941 <span class="old-price">₹12,999</span></p>
+                <div class="rating-container"><img src="images/rating_4.png" alt="" class="ratings">
+                    <div class="rating-count">(1.K)</div>
+                </div><br><a href="shop.html" style="text-decoration: none;"><button>View Details</button></a>
+            </center>
+        </div>
+        <div class="products_list">
+            <div class="offer">48.42% OFF</div>
+            <i class="fas fa-heart wishlist-icon"></i>
+            <img src="images/shoe.webp" alt="" height="150px" width="150px" style="padding: 20px;">
+            <center>
+                <h5>D-SNEAKERZ Shoes</h5>
+                <p class="prices">₹619 <span class="old-price">₹1,200</span></p>
+                <div class="rating-container"><img src="images/rating_3.png" alt="" class="ratings">
+                    <div class="rating-count">(100)</div>
+                </div><br><a href="shop.html" style="text-decoration: none;"><button>View Details</button></a>
+            </center>
+        </div>
+        <div class="products_list">
+            <div class="offer">31.09% OFF</div>
+            <i class="fas fa-heart wishlist-icon"></i>
+            <img src="images/Pink_bag.webp" alt="" height="150px" width="150px" style="padding: 20px;">
+            <center>
+                <h5>SANNIDHI Bag</h5>
+                <p class="prices">₹1,859 <span class="old-price">₹2,699</span></p>
+                <div class="rating-container"><img src="images/rating_3.5.png" alt="" class="ratings">
+                    <div class="rating-count">(350)</div>
+                </div><br><a href="shop.html" style="text-decoration: none;"><button>View Details</button></a>
+            </center>
+        </div>
+        <div class="products_list">
+            <div class="offer">72.49% OFF</div>
+            <i class="fas fa-heart wishlist-icon"></i>
+            <img src="images/Portronics.webp" alt="" height="150px" width="150px" style="padding: 20px;">
+            <center>
+                <h5>Portronics Harmonics</h5>
+                <p class="prices">₹549 <span class="old-price">₹1,999</span></p>
+                <div class="rating-container"><img src="images/rating_4.png" alt="" class="ratings">
+                    <div class="rating-count">(900)</div>
+                </div><br><a href="shop.html" style="text-decoration: none;"><button>View Details</button></a>
+            </center>
+        </div>
+        <div class="products_list">
+            <div class="offer">44.54% OFF</div>
+            <i class="fas fa-heart wishlist-icon"></i>
+            <img src="images/Ambrane.webp" alt="" height="150px" width="150px" style="padding: 20px;">
+            <center>
+                <h5>Stringz 38 Lite</h5>
+                <p class="prices">₹249 <span class="old-price">₹449</span></p>
+                <div class="rating-container"><img src="images/rating_3.png" alt="" class="ratings">
+                    <div class="rating-count">(150)</div>
+                </div><br><a href="shop.html" style="text-decoration: none;"><button>View Details</button></a>
+            </center>
+        </div>
+        <div class="products_list">
+            <div class="offer">16.13% OFF</div>
+            <i class="fas fa-heart wishlist-icon"></i>
+            <img src="images/safari_bag.webp" alt="" height="150px" width="150px" style="padding: 20px;">
+            <center>
+                <h5>Safari Omega</h5>
+                <p class="prices">₹649 <span class="old-price">₹750</span></p>
+                <div class="rating-container"><img src="images/rating_3.png" alt="" class="ratings">
+                    <div class="rating-count">(100)</div>
+                </div><br><a href="shop.html" style="text-decoration: none;"><button>View Details</button></a>
+            </center>
+        </div>
+        <div class="products_list">
+            <div class="offer">79.69% OFF</div>
+            <i class="fas fa-heart wishlist-icon"></i>
+            <img src="images/sports_shoe.webp" alt="" height="150px" width="150px" style="padding: 20px;">
+            <center>
+                <h5>BRUTON Shoes</h5>
+                <p class="prices">₹629 <span class="old-price">₹2,999</span></p>
+                <div class="rating-container"><img src="images/rating_3.5.png" alt="" class="ratings">
+                    <div class="rating-count">(250)</div>
+                </div><br><a href="shop.html" style="text-decoration: none;"><button>View Details</button></a>
+            </center>
+        </div>
+        <div class="products_list">
+            <div class="offer">75.70% OFF</div>
+            <i class="fas fa-heart wishlist-icon"></i>
+            <img src="images/Boat.webp" alt="" height="150px" width="150px" style="padding: 20px;">
+            <center>
+                <h5>boAt Rockerz</h5>
+                <p class="prices">₹1,699 <span class="old-price">₹6,990</span></p>
+                <div class="rating-container"><img src="images/rating_3.5.png" alt="" class="ratings">
+                    <div class="rating-count">(500)</div>
+                </div><br><a href="shop.html" style="text-decoration: none;"><button>View Details</button></a>
+            </center>
+        </div>
+        <div class="products_list">
+            <div class="offer">50.01% OFF</div>
+            <i class="fas fa-heart wishlist-icon"></i>
+            <img src="images/Fastrack.webp" alt="" height="150px" width="150px" style="padding: 20px;">
+            <center>
+                <h5>Titan Crest</h5>
+                <p class="prices">₹2,499 <span class="old-price">₹4,999</span></p>
+                <div class="rating-container"><img src="images/rating_4.png" alt="" class="ratings">
+                    <div class="rating-count">(1.2K)</div>
+                </div><br><a href="shop.html" style="text-decoration: none;"><button>View Details</button></a>
+            </center>
+        </div>
+        <div class="products_list">
+            <div class="offer">12.50% OFF</div>
+            <i class="fas fa-heart wishlist-icon"></i>
+            <img src="images/Vivo.webp" alt="" height="150px" width="150px" style="padding: 20px;">
+            <center>
+                <h5>Vivo V50</h5>
+                <p class="prices">₹34,999 <span class="old-price">₹39,999</span></p>
+                <div class="rating-container"><img src="images/rating_4.5.png" alt="" class="ratings">
+                    <div class="rating-count">(3.5K)</div>
+                </div><br><a href="shop.html" style="text-decoration: none;"><button>View Details</button></a>
+            </center>
+        </div>
+    </center>
+
+    <!-- ===== Customer Testimonials ===== -->
+    <section class="testimonials">
+        <h3>What Our Customers Say</h3>
+        <div class="testimonial-cards">
+
+            <div class="testimonial-card">
+                <div class="stars">⭐ ⭐ ⭐ ⭐ ☆</div>
+                <p>"Great delivery speed and customer support. Very satisfied with my purchase!"</p>
+                <h4>- Priya S.</h4>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="stars">⭐ ⭐ ⭐ ⭐ ⭐</div>
+                <p>"Amazing product quality and easy checkout. Highly recommend NilaNova!"</p>
+                <h4>- Arun K.</h4>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="stars">⭐ ⭐ ⭐ ⭐ ☆</div>
+                <p>"Quick responses and smooth returns process. Loved the shopping experience."</p>
+                <h4>- Kavya R.</h4>
+            </div>
+
+        </div>
+    </section>
+
+
+    <footer style="background-color: transparent; color: #fff; padding: 40px 20px; font-family: Arial, sans-serif; font-size: 14px;     border-top: 2px solid purple;
+    box-shadow: 0 0 20px purple;">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between;">
+            <div style="flex: 1 1 200px; margin-bottom: 20px;">
+                <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Get to Know Us</h4>
+                <ul style="list-style: none; padding: 0; line-height: 30px;">
+                    <li><a href="#" style="color: black; text-decoration: none;">About NilaNova</a></li>
+                    <li><a href="#" style="color: black; text-decoration: none;">Careers</a></li>
+                    <li><a href="#" style="color: black; text-decoration: none;">Press Releases</a></li>
+                    <li><a href="#" style="color: black; text-decoration: none;">NilaNova Science</a></li>
+                </ul>
+            </div>
+
+            <div style="flex: 1 1 200px; margin-bottom: 20px;">
+                <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Connect with Us</h4>
+                <ul style="list-style: none; padding: 0; line-height: 30px;">
+                    <li><a href="#" style="color: black; text-decoration: none;">Facebook</a></li>
+                    <li><a href="#" style="color: black; text-decoration: none;">Twitter</a></li>
+                    <li><a href="#" style="color: black; text-decoration: none;">Instagram</a></li>
+                </ul>
+            </div>
+
+            <div style="flex: 1 1 200px; margin-bottom: 20px;">
+                <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Make Money with Us</h4>
+                <ul style="list-style: none; padding: 0; line-height: 30px;">
+                    <li><a href="#" style="color: black; text-decoration: none;">Sell on NilaNova</a></li>
+                    <li><a href="#" style="color: black; text-decoration: none;">Become an Affiliate</a></li>
+                    <li><a href="#" style="color: black; text-decoration: none;">Advertise Your Products</a></li>
+                    <li><a href="#" style="color: black; text-decoration: none;">Fulfilment by NilaNova</a></li>
+                </ul>
+            </div>
+
+            <div style="flex: 1 1 200px; margin-bottom: 20px;">
+                <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Let Us Help You</h4>
+                <ul style="list-style: none; padding: 0; line-height: 30px;">
+                    <li><a href="#" style="color: black; text-decoration: none;">Your Account</a></li>
+                    <li><a href="#" style="color: black; text-decoration: none;">Returns Centre</a></li>
+                    <li><a href="#" style="color: black; text-decoration: none;">100% Purchase Protection</a></li>
+                    <li><a href="#" style="color: black; text-decoration: none;">Download NilaNova App</a></li>
+                    <li><a href="#" style="color: black; text-decoration: none;">Help</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <hr style="border: 0; height: 1px; background: black; margin: 20px 0;">
+
+        <div style="max-width: 1200px; margin: 0 auto; text-align: center; font-size: 12px; line-height: 30px;">
+            <p style="color: black;">
+                Conditions of Use & Sale | Privacy Notice | Interest-Based Ads
+            </p>
+            <p style="color: black;">
+                © 2026 NilaNova.com, Inc. or its affiliates
+            </p>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/address.js"></script>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const slidesContainer = document.getElementById('slides');
+        const prev = document.getElementById('prevSlide');
+        const next = document.getElementById('nextSlide');
+        const dotsContainer = document.getElementById('dots');
+
+        let currentIndex = 0;
+        let direction = 1; // 1 = forward, -1 = backward
+
+        // Create dots
+        slides.forEach((_, idx) => {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (idx === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => goToSlide(idx));
+            dotsContainer.appendChild(dot);
+        });
+
+        // Update slider position
+        function updateSlider() {
+            slidesContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+            document.querySelectorAll('.dot').forEach((dot, idx) => {
+                dot.classList.toggle('active', idx === currentIndex);
+            });
+        }
+
+        // Navigate to specific slide
+        function goToSlide(index) {
+            currentIndex = index;
+            updateSlider();
+        }
+
+        // Next/Prev buttons
+        next.addEventListener('click', () => {
+            if (currentIndex < slides.length - 1) {
+                currentIndex++;
+            } else {
+                direction = -1; // change direction at last slide
+                currentIndex--;
+            }
+            updateSlider();
+        });
+
+        prev.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+            } else {
+                direction = 1; // change direction at first slide
+                currentIndex++;
+            }
+            updateSlider();
+        });
+
+        // Auto-slide with ping-pong effect
+        setInterval(() => {
+            currentIndex += direction;
+
+            // Reverse direction at ends
+            if (currentIndex >= slides.length - 1) direction = -1;
+            if (currentIndex <= 0) direction = 1;
+
+            updateSlider();
+        }, 5000);
+
+        // Set the deal end time (e.g., today at 23:59:59)
+        const dealEnd = new Date();
+        dealEnd.setHours(23, 59, 59, 999);
+
+        const countdownEl = document.getElementById('countdown');
+
+        function updateCountdown() {
+            const now = new Date();
+            let diff = dealEnd - now;
+
+            if (diff < 0) {
+                countdownEl.textContent = "Deal ended!";
+                clearInterval(timerInterval);
+                return;
+            }
+
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            countdownEl.textContent = `Ends in: ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+
+            // Add pulse effect if less than 1 hour remaining
+            if (diff < 3600 * 1000) {
+                countdownEl.style.animation = "pulse 1s infinite";
+            }
+        }
+
+        // Pad numbers with leading zero
+        function pad(num) {
+            return num.toString().padStart(2, "0");
+        }
+
+        // Update every second
+        const timerInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+
+
+        // Manual scroll buttons
+        function scrollRow(rowId, direction) {
+            const container = document.getElementById(rowId);
+            const scrollAmount = container.offsetWidth / 2;
+            container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+        }
+
+        // Auto-scroll for all rows
+        const rows = ['mobiles', 'deals', 'recommended'];
+        const autoScrollSpeed = 3000; // ms
+
+        rows.forEach(rowId => {
+            const container = document.getElementById(rowId);
+            let scrollDir = 1;
+
+            setInterval(() => {
+                // Ping-pong effect
+                if (container.scrollLeft + container.clientWidth >= container.scrollWidth) scrollDir = -1;
+                if (container.scrollLeft <= 0) scrollDir = 1;
+                container.scrollBy({ left: scrollDir * 200, behavior: 'smooth' });
+            }, autoScrollSpeed);
+        });
+
+    </script>
+</body>
+
+</html>

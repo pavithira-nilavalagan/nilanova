@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="images/download.png">
+  <title>Update Address | NilaNova</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden; /* Shield viewport from form horizontal breaking */
+    background: #f3f3f3;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+/* ==========================================================================
+   2. STICKY HEADER SYSTEM
+   ========================================================================== */
+header {
+    width: 100%;
+    height: 70px;
+    padding: 0 5%;
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 2px solid purple;
+    box-shadow: 0 4px 20px rgba(128, 0, 128, 0.25);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+.logo-text h3 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 800;
+    background: linear-gradient(to right, purple, rgb(201, 3, 201), violet, rgb(201, 3, 201), purple);
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: animate-purple 2.5s linear infinite;
+}
+
+@keyframes animate-purple {
+    0% { background-position: 0%; }
+    100% { background-position: 200%; }
+}
+
+.header-menu {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.header-menu a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    font-size: 15px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s ease;
+}
+
+.header-menu a:hover {
+    color: purple;
+}
+
+.header-menu a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 0;
+    height: 2px;
+    background: purple;
+    transition: width 0.3s ease;
+}
+
+.header-menu a:hover::after {
+    width: 100%;
+}
+
+.header-menu i {
+    font-size: 22px;
+}
+
+.cart-icon {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.cart-icon i {
+    font-size: 22px;
+    color: purple;
+}
+
+/* ==========================================================================
+   3. ADDRESS CONTAINER & FORM LAYOUT
+   ========================================================================== */
+.address-container {
+    width: 100%;
+    max-width: 700px;
+    background: white;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.address-title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.address-title p {
+    color: #74008f;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.input-group input,
+.input-group textarea,
+.input-group select {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 15px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    outline: none;
+    background-color: #fff;
+    color: #333;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-group input:focus,
+.input-group textarea:focus,
+.input-group select:focus {
+    border-color: purple;
+    box-shadow: 0 0 0 3px rgba(128, 0, 128, 0.1);
+}
+
+.input-group textarea {
+    resize: none;
+    height: 100px;
+}
+
+.full {
+    grid-column: span 2;
+}
+
+/* Action Control Row */
+.button-row {
+    margin-top: 35px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap; /* Prevent button stacking clip on compact mobile viewports */
+}
+
+.save-btn, .cancel-btn {
+    padding: 14px 40px;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    min-width: 160px;
+}
+
+.save-btn {
+    background: purple;
+    color: white;
+}
+
+.save-btn:hover {
+    background: #74008f;
+    transform: translateY(-1px);
+}
+
+.cancel-btn {
+    border: 2px solid purple;
+    background: white;
+    color: purple;
+}
+
+.cancel-btn:hover {
+    background: purple;
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   4. RESPONSIVE STRUCTURE STYLES (MEDIA QUERIES)
+   ========================================================================== */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        height: auto;
+        gap: 12px;
+        padding: 15px;
+        text-align: center;
+    }
+
+    .header-menu {
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    main {
+        padding: 20px 15px;
+    }
+
+    .address-container {
+        padding: 25px 20px;
+    }
+}
+
+@media (max-width: 580px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .full {
+        grid-column: span 1;
+    }
+
+    .button-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .save-btn, .cancel-btn {
+        width: 100%;
+    }
+
+    .address-title p {
+        font-size: 20px;
+    }
+}
+
+/* ==========================================================================
+   5. RESPONSIVE FOOTER STRUCTURE
+   ========================================================================== */
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 25px;
+}
+
+.footer-col {
+    flex: 1 1 200px;
+    min-width: 140px;
+    margin-bottom: 20px;
+}
+
+.footer-col h4 {
+    color: black;
+    margin-bottom: 12px;
+    font-weight: bold;
+}
+
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+    line-height: 30px;
+}
+
+.footer-col ul a {
+    color: black;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-col ul a:hover {
+    color: purple;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo-text">
+        <h3>NilaNova</h3>
+    </div>
+
+    <nav class="header-menu">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="order.html">Order</a>
+        <a href="track.html">Track</a>
+        <div class="cart-icon">
+        <a href="cart.html">
+            <i class="ri-shopping-cart-2-line"></i>
+        </a>
+        </div>
+    </nav>
+</header>
+
+<div class="main-container">
+
+<div class="address-container">
+
+<div class="address-title">
+<p style="color: #74008f;font-weight: 600;">Update Delivery Address</p>
+</div>
+
+<form id="addressForm">
+
+<div class="form-grid">
+
+<div class="input-group">
+<label>Full Name</label>
+<input type="text" id="fullName" required>
+</div>
+
+<div class="input-group">
+<label>Mobile Number</label>
+<input type="tel" id="mobile" maxlength="10" required>
+</div>
+
+<div class="input-group full">
+<label>House No</label>
+<input type="text" id="house" required>
+</div>
+
+<div class="input-group full">
+<label>Street</label>
+<textarea id="area" required></textarea>
+</div>
+
+<div class="input-group">
+<label>Landmark</label>
+<input type="text" id="landmark">
+</div>
+
+<div class="input-group">
+<label>Pincode</label>
+<input type="text" id="pincode" maxlength="6" required>
+</div>
+
+<div class="input-group">
+<label>City</label>
+<input type="text" id="city" required>
+</div>
+
+<div class="input-group">
+<label>State</label>
+<select id="state" required>
+<option>Select State</option>
+<option>Tamil Nadu</option>
+<option>Kerala</option>
+<option>Karnataka</option>
+<option>Andhra Pradesh</option>
+<option>Telangana</option>
+<option>Maharashtra</option>
+<option>Pondicherry</option>
+</select>
+</div>
+
+</div>
+
+<div class="button-row">
+<button type="submit" class="save-btn">Save Address</button>
+<button type="button" class="cancel-btn" onclick="window.location.href='index.html'">
+    Cancel
+</button>
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+ <footer
+    style="background-color: transparent; color: #fff; padding: 40px 20px; font-family: Arial, sans-serif; font-size: 14px; border-top: 2px solid purple; box-shadow: 0 0 20px purple;">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between;">
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Get to Know Us</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">About NilaNova</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Careers</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Press Releases</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">NilaNova Science</a></li>
+        </ul>
+      </div>
+
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Connect with Us</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">Facebook</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Twitter</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Instagram</a></li>
+        </ul>
+      </div>
+
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Make Money with Us</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">Sell on NilaNova</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Become an Affiliate</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Advertise Your Products</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Fulfilment by NilaNova</a></li>
+        </ul>
+      </div>
+
+      <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <h4 style="color: black; margin-bottom: 10px; font-weight: bold;">Let Us Help You</h4>
+        <ul style="list-style: none; padding: 0; line-height: 30px;">
+          <li><a href="#" style="color: black; text-decoration: none;">Your Account</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Returns Centre</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">100% Purchase Protection</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Download NilaNova App</a></li>
+          <li><a href="#" style="color: black; text-decoration: none;">Help</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <hr style="border: 0; height: 1px; background: black; margin: 20px 0;">
+
+    <div style="max-width: 1200px; margin: 0 auto; text-align: center; font-size: 12px; line-height: 30px;">
+      <p style="color: black;">
+        Conditions of Use & Sale | Privacy Notice | Interest-Based Ads
+      </p>
+      <p style="color: black;">
+        © 2026 NilaNova.com, Inc. or its affiliates
+      </p>
+    </div>
+  </footer>
+<script src="js/auth.js"></script>
+
+<script src="js/address.js"></script>
+</body>
+</html>
