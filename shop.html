@@ -586,11 +586,7 @@ main {
     </div>
   </footer>
 
-  <script>
 
-    requireLogin();
-
-  </script>
 
   <script>
 
@@ -739,7 +735,12 @@ main {
           <div class="product-side">
             <p class="exchange">With Exchange: <span>Up to ₹${Math.round(p.price * 0.4).toLocaleString()}</span></p>
             <p>Without Exchange: <span style="color: rgb(233,12,107); font-weight:700;">₹${p.price.toLocaleString()}</span></p>
-            <p><a href="update.html" style="font-size:13px; color:#0066cc;">Delivering to Chennai 600002 - Update location</a></p>
+                       <p style="margin: 4px 0;">
+  <a href="address.html" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; color: #0066cc; font-size: 13px; font-weight: 500;">
+    <i class="ri-map-pin-2-fill" style="color: purple; font-size: 15px;"></i>
+    <span id="cardLocation_${p.id}">Delivering to Chennai 600002</span>
+  </a>
+</p>
             <div style="width:100%; margin-top:8px;">
 <button class="btn btn-cart" style="width:100%;" onclick="addToCart(${p.id})">
     Add to Cart
@@ -759,6 +760,19 @@ onclick="addToWishlist(${p.id})">
         `;
 
         listEl.appendChild(card);
+
+                (() => {
+          const userObj = JSON.parse(localStorage.getItem("currentUser"));
+          if (userObj && userObj.email) {
+            const userAddressKey = "address_" + userObj.email;
+            const userSavedAddress = JSON.parse(localStorage.getItem(userAddressKey));
+            const targetCardSpan = document.getElementById(`cardLocation_${p.id}`);
+
+            if (targetCardSpan && userSavedAddress && userSavedAddress.city && userSavedAddress.pincode) {
+              targetCardSpan.textContent = `Delivering to ${userSavedAddress.city} ${userSavedAddress.pincode}`;
+            }
+          }
+        })();
       });
 
       // showing counts
